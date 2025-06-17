@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC 통합 컨설팅: 친구 돕기 역할극</title>
+    <meta name="description" content="ABC 사고 모델과 4단계 컨설팅을 통합한 교육용 역할극 도구">
+    
+    <!-- Tailwind CSS CDN (GitHub Pages 안정적 버전) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- html2canvas CDN (백업 포함) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" 
+            onerror="this.onerror=null; this.src='https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js'"></script>
+    
+    <!-- 한글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* 커스텀 애니메이션 */
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-hover:hover { transform: translateY(-2px); transition: all 0.2s; }
+        .mode-btn.active { background: linear-gradient(135deg, #10b981, #059669); }
+        .abc-card { transition: all 0.2s; cursor: pointer; }
+        .abc-card:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .abc-card.filled { background: linear-gradient(135deg, #dbeafe, #93c5fd); }
+        
+        /* 단계 네비게이션 */
+        .step-nav-btn { 
+            transition: all 0.2s; 
+            cursor: pointer; 
+            border: 2px solid transparent;
+        }
+        .step-nav-btn:hover:not(.step-nav-active) { 
+            background: #e5e7eb !important; 
+            transform: translateY(-1px); 
+        }
+        .step-nav-btn.step-nav-active { 
+            border-color: #059669;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+        }
+        .step-nav-btn.step-nav-visited { 
+            background: #d1fae5 !important; 
+            color: #065f46 !important; 
+        }
+        .step-nav-btn.step-nav-completed {
+            background: #10b981 !important;
+            color: white !important;
+        }
+        
+        /* 역할 구분 색상 */
+        .role-consultant { border-left: 4px solid #10b981; background: #f0fdf4; }
+        .role-client { border-left: 4px solid #3b82f6; background: #eff6ff; }
+        
+        /* 감정 버튼 스타일 */
+        .emotion-btn.selected {
+            border-color: #10b981;
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: 600;
+        }
+        
+        /* 반응형 그리드 */
+        @media (max-width: 768px) {
+            .grid-responsive { grid-template-columns: 1fr; }
+        }
+        
+        /* 인쇄 스타일 */
+        @media print {
+            body * { visibility: hidden; }
+            #printable-consultation, #printable-consultation * { 
+                visibility: visible; 
+            }
+            #printable-consultation {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+            }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen p-4">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- 메인 헤더 -->
+        <header class="text-center bg-white rounded-2xl shadow-lg p-6 mb-6 border-t-4 border-green-500">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">🎭 ABC 통합 컨설팅</h1>
+            <p class="text-gray-600 mb-4">ABC 사고 분석과 4단계 컨설팅으로 친구를 도와주는 역할극 연습</p>
+            <div class="flex justify-center items-center gap-4 text-sm">
+                <div class="role-consultant px-3 py-1 rounded-full">👨‍🏫 컨설턴트</div>
+                <div class="role-client px-3 py-1 rounded-full">🙋‍♀️ 내담자</div>
+            </div>
+        </header>
+
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="slide-in">
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">🎯 역할극 준비하기</h2>
+                    <p class="text-gray-600">두 명이 짝을 이뤄 컨설턴트와 내담자 역할을 번갈아 해보며 4단계 컨설팅을 연습해보세요.</p>
+                </div>
+
+                <!-- 참가자 정보 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="role-consultant p-4 rounded-lg">
+                        <h3 class="font-bold text-green-700 mb-3">👨‍🏫 컨설턴트 (도움 주는 사람)</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="consultant-name" placeholder="이름" class="w-full p-2 border rounded-lg">
+                            <input type="text" id="consultant-class" placeholder="학년/반" class="w-full p-2 border rounded-lg">
+                        </div>
+                    </div>
+                    <div class="role-client p-4 rounded-lg">
+                        <h3 class="font-bold text-blue-700 mb-3">🙋‍♀️ 내담자 (도움 받는 사람)</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="client-name" placeholder="이름" class="w-full p-2 border rounded-lg">
+                            <input type="text" id="client-class" placeholder="학년/반" class="w-full p-2 border rounded-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사례 선택 -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">💭 어떤 고민을 다뤄볼까요?</h3>
+                    
+                    <!-- 모드 선택 -->
+                    <div class="flex gap-4 mb-4">
+                        <button id="random-mode" class="mode-btn active px-6 py-3 text-white rounded-lg flex-1 btn-hover">
+                            🎲 준비된 사례 (50가지)
+                        </button>
+                        <button id="custom-mode" class="mode-btn px-6 py-3 bg-gray-300 text-gray-700 rounded-lg flex-1 btn-hover">
+                            ✏️ 직접 입력하기
+                        </button>
+                    </div>
+
+                    <!-- 랜덤 사례 영역 -->
+                    <div id="random-case-area" class="case-mode-area">
+                        <button id="draw-case-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg btn-hover mb-4">
+                            🔄 새로운 고민 뽑기
+                        </button>
+                        <div id="case-display" class="bg-gray-50 p-4 rounded-lg min-h-[100px] flex items-center justify-center text-gray-500">
+                            버튼을 눌러 고민 사례를 뽑아보세요!
+                        </div>
+                    </div>
+
+                    <!-- 직접 입력 영역 -->
+                    <div id="custom-case-area" class="case-mode-area hidden">
+                        <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-sm">
+                            <p class="font-bold text-yellow-800">📝 입력 가이드</p>
+                            <ul class="text-yellow-700 ml-4 list-disc">
+                                <li>실명 대신 "친구", "선생님" 등으로 표현해주세요</li>
+                                <li>실제 경험이나 가상 상황 모두 괜찮아요</li>
+                                <li>다른 친구들도 학습할 수 있는 사례면 더 좋아요</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-3">
+                            <input id="custom-title" type="text" placeholder="고민 제목 (예: 친구와의 갈등)" class="w-full p-3 border rounded-lg">
+                            <textarea id="custom-content" rows="4" placeholder="상황을 구체적으로 설명해주세요..." class="w-full p-3 border rounded-lg"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="start-roleplay-btn" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-4 text-lg rounded-lg btn-hover">
+                    🎭 역할극 시작하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 역할극 화면 -->
+        <div id="roleplay-screen" class="hidden slide-in">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- 왼쪽: 현재 단계 & 안내 -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-4">
+                        <!-- 단계 네비게이션 -->
+                        <div class="text-center mb-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">컨설팅 단계</h3>
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <button id="step-nav-1" class="step-nav-btn step-nav-active px-3 py-2 text-sm rounded-lg bg-green-500 text-white font-medium" data-step="1">
+                                    💚 1단계<br><span class="text-xs">공감하기</span>
+                                </button>
+                                <button id="step-nav-2" class="step-nav-btn px-3 py-2 text-sm rounded-lg bg-gray-300 text-gray-600 font-medium" data-step="2">
+                                    🔍 2단계<br><span class="text-xs">ABC 분석</span>
+                                </button>
+                                <button id="step-nav-3" class="step-nav-btn px-3 py-2 text-sm rounded-lg bg-gray-300 text-gray-600 font-medium" data-step="3">
+                                    ✨ 3단계<br><span class="text-xs">새로운 생각</span>
+                                </button>
+                                <button id="step-nav-4" class="step-nav-btn px-3 py-2 text-sm rounded-lg bg-gray-300 text-gray-600 font-medium" data-step="4">
+                                    🎁 4단계<br><span class="text-xs">격려하기</span>
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600" id="step-desc">마음을 따뜻하게 공감해주세요</p>
+                        </div>
+
+                        <!-- 현재 역할 표시 -->
+                        <div class="mb-6">
+                            <div id="role-display" class="role-consultant p-3 rounded-lg text-center">
+                                <div class="font-bold">👨‍🏫 현재 컨설턴트</div>
+                                <div class="text-sm" id="current-consultant">김민수</div>
+                            </div>
+                        </div>
+
+                        <!-- 단계별 가이드 -->
+                        <div id="step-guide" class="space-y-3 text-sm">
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <div class="font-bold text-green-700">💚 공감 포인트</div>
+                                <ul class="list-disc ml-4 text-green-600">
+                                    <li>감정을 인정해주기</li>
+                                    <li>"힘들었겠구나" 표현</li>
+                                    <li>비슷한 경험 공유</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 단계 이동 버튼들 -->
+                        <div class="space-y-2 mt-4">
+                            <button id="prev-step-btn" class="w-full bg-gray-400 text-white font-bold py-2 rounded-lg btn-hover disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                ⬅️ 이전 단계로
+                            </button>
+                            <button id="next-step-btn" class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg btn-hover">
+                                ➡️ 다음 단계로
+                            </button>
+                        </div>
+                        
+                        <!-- 역할 교체 버튼 -->
+                        <button id="switch-roles-btn" class="w-full bg-orange-500 text-white font-bold py-2 rounded-lg mt-4 btn-hover">
+                            🔄 역할 바꾸기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 오른쪽: 컨설팅 작업 영역 -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        
+                        <!-- 고민 사례 표시 -->
+                        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-2" id="displayed-title">현재 고민</h4>
+                            <p class="text-gray-700" id="displayed-content">고민 내용이 여기에 표시됩니다.</p>
+                        </div>
+
+                        <!-- 1단계: 공감하기 -->
+                        <div id="step1-empathy" class="step-content bg-green-50 p-4 rounded-lg mb-4">
+                            <h4 class="text-lg font-bold text-green-700 mb-3">💚 1단계: 마음 공감하기</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">🎭 내담자의 감정 파악하기</label>
+                                    <div id="recommended-emotions" class="grid grid-cols-3 gap-2 mb-3">
+                                        <!-- 동적으로 생성될 감정 버튼들 -->
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="direct-emotion-input" placeholder="직접 감정 입력" class="flex-1 p-2 border rounded-lg text-sm">
+                                        <button id="add-direct-emotion-btn" class="bg-green-500 text-white px-3 py-2 rounded-lg text-sm btn-hover">추가</button>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="text-xs text-gray-600 mb-1">선택된 감정들:</div>
+                                        <div id="selected-emotions-list" class="flex flex-wrap gap-1">
+                                            <span class="text-xs text-gray-500">감정을 선택하거나 입력해주세요</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">💚 공감 표현하기</label>
+                                    <textarea id="empathy-text" rows="3" class="w-full p-3 border rounded-lg" 
+                                              placeholder="친구의 감정을 인정하고 공감하는 말을 해보세요..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2단계: ABC 함께 분석하기 -->
+                        <div id="step2-abc" class="step-content hidden bg-blue-50 p-4 rounded-lg mb-4">
+                            <h4 class="text-lg font-bold text-blue-700 mb-3">🔍 2단계: ABC 함께 분석하기</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-red-300" data-abc="A">
+                                    <div class="font-bold text-red-600 text-xl">A</div>
+                                    <div class="text-xs text-red-600">사실/사건</div>
+                                </div>
+                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-orange-300" data-abc="B">
+                                    <div class="font-bold text-orange-600 text-xl">B</div>
+                                    <div class="text-xs text-orange-600">생각</div>
+                                </div>
+                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-blue-300" data-abc="C">
+                                    <div class="font-bold text-blue-600 text-xl">C</div>
+                                    <div class="text-xs text-blue-600">결과</div>
+                                </div>
+                            </div>
+                            <textarea id="abc-analysis" rows="3" class="w-full p-3 border rounded-lg" 
+                                      placeholder="A: 무슨 일이 일어났지? B: 어떤 생각이 들었어? C: 기분이나 행동이 어땠어?"></textarea>
+                        </div>
+
+                        <!-- 3단계: 새로운 생각 함께 만들기 -->
+                        <div id="step3-reframe" class="step-content hidden bg-purple-50 p-4 rounded-lg mb-4">
+                            <h4 class="text-lg font-bold text-purple-700 mb-3">✨ 3단계: 새로운 생각 함께 만들기</h4>
+                            <div class="bg-yellow-50 p-3 rounded-lg mb-3">
+                                <p class="text-sm font-semibold text-yellow-800 mb-2">💡 생각 바꾸기 질문들</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-yellow-700">
+                                    <div>• 친한 친구라면 뭐라고 할까?</div>
+                                    <div>• 이 생각이 100% 사실일까?</div>
+                                    <div>• 다른 가능성은 없을까?</div>
+                                    <div>• 1년 후에도 중요할까?</div>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">B' 새로운 생각</label>
+                                    <textarea id="new-thinking" rows="3" class="w-full p-3 border rounded-lg" 
+                                              placeholder="더 현실적이고 도움이 되는 생각으로 바꿔보세요..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">🎯 구체적인 도움 방법</label>
+                                    <textarea id="help-suggestions" rows="3" class="w-full p-3 border rounded-lg" 
+                                              placeholder="친구가 실제로 할 수 있는 구체적인 행동을 제안해보세요..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4단계: 격려하기 -->
+                        <div id="step4-encourage" class="step-content hidden bg-pink-50 p-4 rounded-lg">
+                            <h4 class="text-lg font-bold text-pink-700 mb-3">🎁 4단계: 따뜻한 격려하기</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <button id="draw-encouragement-btn" class="bg-pink-500 text-white px-4 py-2 rounded-lg btn-hover mb-2">
+                                        🎲 격려 메시지 뽑기
+                                    </button>
+                                    <div id="encouragement-message" class="bg-white p-3 rounded-lg min-h-[50px] flex items-center justify-center text-pink-700 font-medium">
+                                        격려 메시지를 뽑아보세요!
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">💌 나만의 격려 메시지</label>
+                                    <textarea id="personal-encouragement" rows="3" class="w-full p-3 border rounded-lg" 
+                                              placeholder="친구에게 전하고 싶은 특별한 격려의 말을 써보세요..."></textarea>
+                                </div>
+                                
+                                <!-- 컨설팅 완료 버튼 -->
+                                <div class="pt-4 border-t">
+                                    <button id="save-consultation-btn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg btn-hover text-lg">
+                                        💾 컨설팅 결과 저장하기
+                                    </button>
+                                    <p class="text-xs text-gray-500 text-center mt-2">
+                                        모든 단계의 내용이 정리된 결과물을 이미지로 저장하거나 인쇄할 수 있습니다
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="hidden slide-in">
+            <!-- 캡처될 영역 -->
+            <div id="printable-consultation" class="bg-gradient-to-br from-yellow-50 via-pink-50 to-purple-50 rounded-2xl shadow-lg p-8 mb-6">
+                <div class="text-center mb-8 border-b-2 border-pink-200 pb-6">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">🎉 ABC 컨설팅 완료 보고서</h2>
+                    <p class="text-gray-600 mb-4">따뜻한 마음으로 친구를 도와준 컨설팅 결과입니다</p>
+                    <div class="text-sm text-gray-500" id="consultation-info">
+                        <!-- 컨설턴트/내담자 정보가 여기에 표시 -->
+                    </div>
+                </div>
+
+                <div id="consultation-summary" class="space-y-6">
+                    <!-- 동적으로 생성될 요약 내용 -->
+                </div>
+                
+                <div class="text-center text-sm text-gray-500 mt-8 pt-6 border-t-2 border-pink-200">
+                    <p>컨설팅 완료 시간: <span id="completion-time"></span></p>
+                    <p class="mt-1">🌟 ABC 통합 컨설팅 도구로 제작되었습니다</p>
+                </div>
+            </div>
+            
+            <!-- 버튼들은 캡처 영역 밖에 배치 -->
+            <div class="no-print space-y-4">
+                <!-- 메인 액션 버튼들 -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="download-image-btn" class="bg-blue-500 text-white font-bold px-8 py-3 rounded-lg btn-hover text-lg">
+                        📷 이미지로 저장하기
+                    </button>
+                    <button id="print-consultation-btn" class="bg-green-500 text-white font-bold px-8 py-3 rounded-lg btn-hover text-lg">
+                        🖨️ 인쇄하기 (PDF 저장)
+                    </button>
+                </div>
+                
+                <!-- 도움말 -->
+                <div class="text-center text-sm text-gray-600 bg-yellow-50 p-4 rounded-lg">
+                    <p class="font-semibold mb-2">💡 저장 방법 안내</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <p><strong>📷 이미지 저장:</strong> 컨설팅 결과를 PNG 이미지로 다운로드</p>
+                            <p><strong>🖨️ 인쇄하기:</strong> 브라우저 인쇄 창에서 "PDF로 저장" 선택</p>
+                        </div>
+                        <div>
+                            <p><strong>🖼️ 전체화면:</strong> 큰 화면으로 보며 스크린샷 촬영</p>
+                            <p><strong>📱 모바일:</strong> 전체화면 후 스크린샷 추천</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">※ 이미지 저장이 안 되는 경우 인쇄 또는 전체화면 기능을 이용해주세요</p>
+                </div>
+                
+                <!-- 추가 액션 버튼들 -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button id="switch-and-restart-btn" class="bg-orange-500 text-white font-bold px-6 py-2 rounded-lg btn-hover">
+                        🔄 역할 바꿔서 다시하기
+                    </button>
+                    <button id="new-case-btn" class="bg-purple-500 text-white font-bold px-6 py-2 rounded-lg btn-hover">
+                        🆕 새로운 사례로 시작
+                    </button>
+                    <button id="restart-btn" class="bg-gray-500 text-white font-bold px-6 py-2 rounded-lg btn-hover">
+                        🏠 처음으로
+                    </button>
+                    <button id="fullscreen-btn" class="bg-indigo-500 text-white font-bold px-6 py-2 rounded-lg btn-hover">
+                        🖼️ 전체화면 보기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== 데이터 =====
+        const sampleCases = [
+            { 
+                title: "시험 성적이 나빠서 속상해", 
+                content: "열심히 공부했는데 시험 성적이 생각보다 많이 안 좋게 나왔어. 부모님께 어떻게 말씀드려야 할지 모르겠고, 친구들과 비교되는 것도 싫어.",
+                emotions: ["😞 실망", "😟 걱정", "😳 부끄러움", "😤 좌절감", "😔 자책감", "😨 두려움"]
+            },
+            { 
+                title: "친구가 내 비밀을 다른 사람에게 말했어", 
+                content: "가장 친한 친구라고 생각했는데, 내가 말하지 말라고 했던 비밀을 다른 반 애들에게 다 말해버렸어. 너무 배신감이 들고 앞으로 그 친구를 어떻게 대해야 할지 모르겠어.",
+                emotions: ["😠 화남", "😔 배신감", "😢 슬픔", "😟 걱정", "😤 억울함", "😞 실망"]
+            },
+            { 
+                title: "새 학급에 적응하기 어려워", 
+                content: "새 학기가 시작되고 반이 바뀌었는데, 아직도 친구를 잘 못 사귀었어. 다른 애들은 이미 친해진 것 같은데 나만 혼자인 것 같아서 학교 가기가 싫어져.",
+                emotions: ["😔 외로움", "😟 불안함", "😳 부끄러움", "😞 소외감", "😨 두려움", "😤 답답함"]
+            },
+            { 
+                title: "부모님이 자꾸 다른 애와 비교해", 
+                content: "엄마가 맨날 사촌 형이나 친구들과 나를 비교해. '누구는 이렇게 잘하는데 너는 왜 못하니?'라고 말씀하시면 기분이 너무 안 좋아. 열심히 하고 있는데 인정받지 못하는 것 같아.",
+                emotions: ["😠 화남", "😔 서러움", "😤 억울함", "😞 자괴감", "😟 스트레스", "😢 슬픔"]
+            },
+            { 
+                title: "선생님께 억울하게 혼났어", 
+                content: "오늘 수업 시간에 내가 하지도 않은 일로 선생님께 혼났어. 진짜 억울하고 화가 나는데, 변명하면 더 혼날 것 같아서 아무 말도 못했어. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😠 화남", "😤 억울함", "😞 답답함", "😟 당황스러움", "😔 무력감", "😨 두려움"]
+            },
+            { 
+                title: "반에서 따돌림을 당하고 있어", 
+                content: "몇몇 친구들이 나를 일부러 무시하고 같이 놀지 않으려고 해. 뭘 잘못했는지도 모르겠는데 점점 혼자가 되어가는 것 같아. 학교 가는 게 무서워졌어.",
+                emotions: ["😢 슬픔", "😔 외로움", "😨 두려움", "😟 불안함", "😞 우울함", "😤 답답함"]
+            },
+            { 
+                title: "진로를 정하지 못하겠어", 
+                content: "중학교에 올라가면서 진로에 대해 생각해보라고 하는데, 정말 뭘 하고 싶은지 모르겠어. 친구들은 이미 꿈이 정해진 것 같은데 나만 아무것도 모르는 것 같아서 답답해.",
+                emotions: ["😟 불안함", "😤 답답함", "😔 조급함", "😞 막막함", "😳 부끄러움", "😨 걱정"]
+            },
+            { 
+                title: "게임 때문에 부모님과 자꾸 싸워", 
+                content: "게임을 너무 오래 한다고 부모님이 화내시는데, 친구들과 함께 하는 게임이라 중간에 그만둘 수가 없어. 그런데 계속 싸우니까 집에 있는 것도 불편하고 스트레스가 많이 쌓여.",
+                emotions: ["😠 화남", "😤 답답함", "😟 스트레스", "😔 죄책감", "😞 고민됨", "😨 걱정"]
+            },
+            { 
+                title: "발표할 때마다 너무 떨려", 
+                content: "수업 시간에 발표를 해야 할 때마다 심장이 너무 빨리 뛰고 목소리가 떨려. 다른 애들이 나를 어떻게 생각할지 걱정되고, 실수할까 봐 무서워서 발표가 있는 날은 학교에 가기 싫어져.",
+                emotions: ["😨 두려움", "😟 불안함", "😳 부끄러움", "😞 긴장감", "😔 걱정", "😤 스트레스"]
+            },
+            { 
+                title: "용돈이 부족해서 고민이야", 
+                content: "친구들은 다 새로운 걸 사는데 나는 용돈이 부족해서 못 사겠어. 부모님께 더 달라고 하기는 어려운 상황이고, 친구들과 함께 할 수 없는 일들이 많아져서 소외감을 느껴.",
+                emotions: ["😔 소외감", "😞 서러움", "😟 걱정", "😤 답답함", "😳 부끄러움", "😢 속상함"]
+            },
+            { 
+                title: "형제자매와 자꾸 싸워", 
+                content: "동생(형)과 맨날 사소한 일로 싸워. 부모님은 항상 내가 양보하라고 하시는데 그것도 억울하고, 집에서 편하게 쉴 수가 없어서 짜증이 많이 나.",
+                emotions: ["😠 화남", "😤 억울함", "😞 짜증남", "😔 스트레스", "😟 피곤함", "😢 속상함"]
+            },
+            { 
+                title: "몸무게 때문에 스트레스받아", 
+                content: "요즘 몸무게가 늘어서 걱정이야. 다른 친구들과 비교하게 되고, 체육 시간이나 수영장 갈 때 부끄러워. 다이어트를 해보려고 하는데 쉽지 않아서 더 스트레스받아.",
+                emotions: ["😔 스트레스", "😳 부끄러움", "😞 자괴감", "😟 걱정", "😤 답답함", "😢 속상함"]
+            },
+            { 
+                title: "휴대폰을 잃어버렸어", 
+                content: "어제 휴대폰을 잃어버렸는데, 부모님께 아직 말씀드리지 못했어. 화내실까 봐 무서우면서도 새로 사달라고 하기는 부담스러워. 친구들과 연락도 못하겠고 어떻게 해야 할지 모르겠어.",
+                emotions: ["😨 두려움", "😟 걱정", "😞 당황스러움", "😔 죄책감", "😤 답답함", "😳 부끄러움"]
+            },
+            { 
+                title: "클럽활동에서 실수했어", 
+                content: "오늘 동아리 활동에서 큰 실수를 했어. 다른 멤버들에게 피해를 줬는데, 어떻게 사과해야 할지 모르겠어. 내 실수 때문에 팀 전체 분위기가 안 좋아진 것 같아서 미안하고 부담스러워.",
+                emotions: ["😔 죄책감", "😞 미안함", "😟 걱정", "😳 부끄러움", "😤 자책감", "😨 두려움"]
+            },
+            { 
+                title: "좋아하는 친구가 있는데 고백할 용기가 안 나", 
+                content: "좋아하는 친구가 있는데 고백할 용기가 없어. 거절당할까 봐 무서우면서도, 지금처럼 친구로 지내는 것도 좋은데 괜히 어색해질까 봐 걱정돼. 어떻게 해야 할지 정말 모르겠어.",
+                emotions: ["😨 두려움", "😟 설렘", "😞 고민됨", "😳 부끄러움", "😔 걱정", "😤 답답함"]
+            },
+            { 
+                title: "알바를 시작했는데 힘들어", 
+                content: "용돈을 벌기 위해 알바를 시작했는데 생각보다 힘들어. 학업과 병행하기 어렵고, 가끔 손님들이 불친절할 때도 있어서 스트레스받아. 그만둘까 생각하는데 돈도 필요해서 고민이야.",
+                emotions: ["😔 스트레스", "😞 피곤함", "😟 걱정", "😤 답답함", "😠 짜증남", "😨 부담감"]
+            },
+            { 
+                title: "SNS에서 악플을 받았어", 
+                content: "내가 올린 사진에 누가 악플을 달았어. 익명이라서 누군지 모르겠는데 내용이 너무 상처가 돼. SNS를 하기 무서워지고, 혹시 아는 사람이 쓴 건 아닐까 의심도 돼.",
+                emotions: ["😢 상처받음", "😠 화남", "😨 두려움", "😟 불안함", "😔 우울함", "😞 속상함"]
+            },
+            { 
+                title: "반장 선거에서 떨어졌어", 
+                content: "반장 선거에 나갔는데 떨어졌어. 나름 열심히 준비했는데 다른 친구가 당선돼서 속상해. 친구들이 나를 어떻게 생각하는지도 궁금하고, 다음에 또 도전해야 할지 고민돼.",
+                emotions: ["😞 실망", "😔 속상함", "😟 걱정", "😳 부끄러움", "😤 아쉬움", "😢 서운함"]
+            },
+            { 
+                title: "이사 때문에 친구들과 헤어져야 해", 
+                content: "아빠 직장 때문에 다른 지역으로 이사를 가게 됐어. 여기 친구들과 헤어지는 게 너무 싫고, 새로운 곳에서 잘 적응할 수 있을지 걱정돼. 어떻게 이별 인사를 해야 할지도 모르겠어.",
+                emotions: ["😢 슬픔", "😔 아쉬움", "😟 걱정", "😨 두려움", "😞 우울함", "😤 서운함"]
+            },
+            { 
+                title: "학원 때문에 친구들과 놀 시간이 없어", 
+                content: "부모님이 학원을 너무 많이 보내셔서 친구들과 놀 시간이 없어. 매일 학원만 다니니까 재미도 없고, 친구들과 점점 멀어지는 것 같아서 외로워. 그렇다고 부모님께 그만두겠다고 말하기도 어려워.",
+                emotions: ["😔 외로움", "😞 피곤함", "😟 스트레스", "😤 답답함", "😢 속상함", "😨 부담감"]
+            },
+            { 
+                title: "급식이 맛없어서 먹기 싫어", 
+                content: "요즘 급식이 정말 맛없어서 먹기가 싫어. 친구들도 다 맛없다고 하는데 어떻게 해야 할지 모르겠어. 그냥 굶으면 오후에 배고프고, 도시락을 싸달라고 하기도 부담스러워.",
+                emotions: ["😤 짜증남", "😞 속상함", "😟 걱정", "😔 스트레스", "😨 부담스러움", "😠 불만"]
+            },
+            { 
+                title: "체육시간이 너무 부끄러워", 
+                content: "체육시간에 운동을 못해서 항상 부끄러워. 친구들은 다 잘하는데 나만 못하는 것 같아서 체육시간이 되면 학교에 가기 싫어져. 선생님께 말씀드리고 싶은데 용기가 안 나.",
+                emotions: ["😳 부끄러움", "😞 자괴감", "😟 걱정", "😔 스트레스", "😨 두려움", "😤 답답함"]
+            },
+            { 
+                title: "교실에서 냄새가 날까 봐 걱정돼", 
+                content: "요즘 사춘기라서 체취가 생긴 것 같아. 친구들이 나 때문에 냄새가 난다고 생각할까 봐 걱정돼. 데오드란트를 써보려고 하는데 부모님께 말하기가 부끄러워.",
+                emotions: ["😳 부끄러움", "😟 걱정", "😞 스트레스", "😨 두려움", "😔 위축감", "😤 민감함"]
+            },
+            { 
+                title: "수학을 도저히 모르겠어", 
+                content: "수학 수업을 아무리 들어도 이해가 안 돼. 선생님께 질문하고 싶은데 바보같아 보일까 봐 걱정돼. 친구들한테 물어보기도 민망하고, 수학 시간만 되면 스트레스받아.",
+                emotions: ["😞 좌절감", "😟 걱정", "😤 답답함", "😔 스트레스", "😳 부끄러움", "😨 두려움"]
+            },
+            { 
+                title: "반 아이들이 시끄러워서 집중이 안 돼", 
+                content: "우리 반 아이들이 수업시간에도 너무 시끄러워서 집중이 안 돼. 선생님도 별로 주의를 안 주시고, 공부하려고 하는데 방해가 돼서 짜증나. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😠 짜증남", "😤 답답함", "😞 스트레스", "😔 피곤함", "😟 걱정", "😨 불안함"]
+            },
+            { 
+                title: "키가 작아서 놀림받아", 
+                content: "친구들이 내 키가 작다고 자꾸 놀려. 농담이라고 하는데 들을 때마다 기분이 안 좋아. 키는 어쩔 수 없는 건데 왜 놀리는 건지 모르겠어. 키 크는 방법이 있을까?",
+                emotions: ["😢 상처받음", "😠 화남", "😞 자괴감", "😔 서러움", "😟 걱정", "😤 억울함"]
+            },
+            { 
+                title: "생리 때문에 체육을 빠지고 싶어", 
+                content: "생리할 때 체육수업 참여하기가 너무 힘들어. 선생님께 말씀드리기도 부끄럽고, 친구들 앞에서 이야기하기도 민망해. 어떻게 자연스럽게 빠질 수 있을까?",
+                emotions: ["😳 부끄러움", "😞 불편함", "😟 걱정", "😔 스트레스", "😨 두려움", "😤 답답함"]
+            },
+            { 
+                title: "부모님이 이혼하실 것 같아", 
+                content: "요즘 부모님이 자주 싸우셔서 혹시 이혼하시는 건 아닌지 걱정돼. 집에 있을 때마다 분위기가 안 좋고, 나 때문에 싸우시는 건 아닌지 걱정돼. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😨 두려움", "😟 걱정", "😢 슬픔", "😔 불안함", "😞 죄책감", "😤 스트레스"]
+            },
+            { 
+                title: "반려동물이 아파서 걱정돼", 
+                content: "우리 강아지가 요즘 아픈 것 같아서 걱정이야. 병원에 가야 하는데 돈이 많이 들까 봐 부모님께 말씀드리기가 부담스러워. 혹시 심각한 병은 아닐까 걱정돼.",
+                emotions: ["😟 걱정", "😢 슬픔", "😞 불안함", "😔 스트레스", "😨 두려움", "😤 답답함"]
+            },
+            { 
+                title: "선생님이 편애하는 것 같아", 
+                content: "선생님이 특정 학생들만 좋아하시는 것 같아. 똑같은 실수를 해도 어떤 애는 혼내고 어떤 애는 안 혼내셔서 억울해. 공평하지 않은 것 같은데 어떻게 말씀드려야 할까?",
+                emotions: ["😤 억울함", "😠 화남", "😞 속상함", "😔 서러움", "😟 걱정", "😨 두려움"]
+            },
+            { 
+                title: "치과 치료가 무서워", 
+                content: "치아가 아픈데 치과 가는 게 너무 무서워. 마취 주사도 무섭고 드릴 소리도 무서워서 계속 미루고 있어. 그런데 더 아파지는 것 같아서 어떻게 해야 할지 모르겠어.",
+                emotions: ["😨 두려움", "😟 걱정", "😞 불안함", "😔 스트레스", "😤 답답함", "😢 아픔"]
+            },
+            { 
+                title: "어른스럽지 못한 것 같아", 
+                content: "친구들은 다 어른스러운데 나만 어린애 같은 느낌이야. 말하는 것도 행동하는 것도 유치한 것 같아서 부끄러워. 어떻게 하면 좀 더 어른스러워질 수 있을까?",
+                emotions: ["😳 부끄러움", "😞 자괴감", "😟 걱정", "😔 위축감", "😤 답답함", "😨 두려움"]
+            },
+            { 
+                title: "야동을 봤는데 죄책감이 들어", 
+                content: "친구가 보여준 야동을 봤는데 계속 죄책감이 들어. 부모님이 알면 실망하실 것 같고, 이런 걸 보는 게 나쁜 건 아닌지 걱정돼. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😔 죄책감", "😟 걱정", "😳 부끄러움", "😞 혼란스러움", "😨 두려움", "😤 답답함"]
+            },
+            { 
+                title: "남자친구/여자친구를 사귀고 싶어", 
+                content: "친구들은 다 연애를 하는데 나만 혼자인 것 같아서 외로워. 좋아하는 사람은 있는데 어떻게 다가가야 할지 모르겠어. 고백하면 거절당할까 봐 무섭기도 하고.",
+                emotions: ["😔 외로움", "😟 걱정", "😞 설렘", "😨 두려움", "😳 부끄러움", "😤 답답함"]
+            },
+            { 
+                title: "부모님께 성적표를 못 보여드리겠어", 
+                content: "이번 성적표가 너무 안 좋게 나와서 부모님께 보여드리기가 무서워. 열심히 했다고 말씀드려도 믿지 않으실 것 같고, 실망하실 생각하니까 집에 가기가 싫어.",
+                emotions: ["😨 두려움", "😞 죄책감", "😟 걱정", "😔 스트레스", "😤 답답함", "😢 속상함"]
+            },
+            { 
+                title: "밤에 무서운 생각이 계속 들어", 
+                content: "밤에 잠들기 전에 무서운 생각들이 계속 떠올라. 귀신이나 도둑 같은 생각이 들어서 잠이 안 와. 부모님께 말씀드리기도 부끄럽고, 어떻게 해야 할지 모르겠어.",
+                emotions: ["😨 두려움", "😟 불안함", "😞 걱정", "😔 스트레스", "😳 부끄러움", "😤 답답함"]
+            },
+            { 
+                title: "반에서 왕따를 시키는 걸 봤어", 
+                content: "우리 반에서 한 친구를 왕따시키는 걸 봤는데 어떻게 해야 할지 모르겠어. 도와주고 싶은데 나도 같이 왕따될까 봐 무섭고, 그냥 보고만 있자니 양심에 걸려.",
+                emotions: ["😟 걱정", "😞 죄책감", "😨 두려움", "😔 갈등", "😤 답답함", "😢 안타까움"]
+            },
+            { 
+                title: "용모에 자신이 없어", 
+                content: "거울을 볼 때마다 내 얼굴이 마음에 안 들어. 친구들은 다 예쁘고 잘생긴 것 같은데 나만 못생긴 것 같아서 자신감이 없어져. 성형수술 같은 생각도 들어.",
+                emotions: ["😞 자괴감", "😔 위축감", "😟 걱정", "😳 부끄러움", "😤 답답함", "😢 속상함"]
+            },
+            { 
+                title: "선배들이 무서워", 
+                content: "학교 선배들이 무서워서 복도를 지날 때마다 긴장돼. 괜히 눈 마주치면 뭐라고 할까 봐 걱정되고, 혹시 시비를 걸까 봐 무서워. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😨 두려움", "😟 걱정", "😞 긴장감", "😔 스트레스", "😤 위축감", "😳 부끄러움"]
+            },
+            { 
+                title: "컴퓨터 게임에서 계속 져서 속상해", 
+                content: "친구들과 게임을 할 때마다 내가 제일 못해서 속상해. 연습을 해도 실력이 늘지 않는 것 같고, 친구들한테 민폐가 되는 것 같아서 같이 게임하기가 부담스러워.",
+                emotions: ["😞 좌절감", "😔 자괴감", "😟 걱정", "😤 답답함", "😢 속상함", "😨 부담감"]
+            },
+            { 
+                title: "화장을 해보고 싶은데 부모님이 반대해", 
+                content: "친구들은 다 화장을 하는데 나만 못하게 해서 속상해. 부모님이 어리다고 안 된다고 하시는데, 친구들과 다른 것 같아서 소외감이 들어. 어떻게 설득해야 할까?",
+                emotions: ["😞 속상함", "😔 소외감", "😟 걱정", "😤 답답함", "😨 부담감", "😢 서운함"]
+            },
+            { 
+                title: "학교에서 돈을 잃어버렸어", 
+                content: "오늘 점심값으로 가져온 돈을 잃어버렸어. 어디서 떨어뜨렸는지 모르겠고, 혹시 누가 가져간 건 아닌지 의심스러워. 부모님께 말씀드리기도 부끄럽고 어떻게 해야 할까?",
+                emotions: ["😟 걱정", "😞 당황스러움", "😔 속상함", "😳 부끄러움", "😤 답답함", "😨 두려움"]
+            },
+            { 
+                title: "반 친구가 내 물건을 자꾸 빌려가", 
+                content: "한 친구가 내 물건을 자꾸 빌려가는데 돌려달라고 말하기가 어려워. 거절하면 인색하다고 생각할까 봐 걱정되고, 그렇다고 계속 빌려주기도 부담스러워.",
+                emotions: ["😟 걱정", "😞 부담스러움", "😤 답답함", "😔 스트레스", "😨 두려움", "😳 난처함"]
+            },
+            { 
+                title: "숙제를 깜빡해서 거짓말했어", 
+                content: "숙제를 깜빡하고 안 해와서 거짓말로 아프다고 했어. 선생님께 거짓말한 게 계속 마음에 걸리고, 들킬까 봐 걱정돼. 어떻게 해야 할지 모르겠어.",
+                emotions: ["😔 죄책감", "😟 걱정", "😞 후회", "😨 두려움", "😤 답답함", "😳 부끄러움"]
+            },
+            { 
+                title: "친구들이 내 뒤에서 나쁘게 말하는 것 같아", 
+                content: "친구들이 내가 없을 때 나에 대해 안 좋게 이야기하는 것 같아. 확실하지는 않지만 그런 느낌이 들어서 친구들과 있을 때 불편해. 어떻게 확인해야 할까?",
+                emotions: ["😟 걱정", "😞 불안함", "😔 의심", "😤 답답함", "😢 속상함", "😨 두려움"]
+            },
+            { 
+                title: "성교육 시간이 너무 부끄러워", 
+                content: "학교에서 성교육을 하는데 너무 부끄러워서 듣기가 힘들어. 중요한 내용인 건 알겠는데 친구들 앞에서 그런 이야기를 하니까 얼굴이 빨개져. 어떻게 해야 할까?",
+                emotions: ["😳 부끄러움", "😞 민망함", "😟 걱정", "😔 불편함", "😤 답답함", "😨 긴장감"]
+            },
+            { 
+                title: "부모님이 내 일기를 읽으신 것 같아", 
+                content: "부모님이 내 일기를 몰래 읽으신 것 같아. 확실하지는 않지만 그런 느낌이 들어서 더 이상 일기를 쓰기가 불편해. 프라이버시를 침해받는 느낌이라 속상해.",
+                emotions: ["😠 화남", "😞 속상함", "😟 걱정", "😤 억울함", "😔 불편함", "😨 불안함"]
+            },
+            { 
+                title: "학교 급식 당번이 너무 힘들어", 
+                content: "급식 당번 하는 게 너무 힘들어. 무거운 것도 들어야 하고 뒷정리도 해야 하는데, 다른 애들은 제대로 안 도와줘서 혼자 하는 것 같아. 어떻게 해야 할까?",
+                emotions: ["😞 피곤함", "😤 짜증남", "😔 스트레스", "😟 걱정", "😠 억울함", "😨 부담감"]
+            },
+            { 
+                title: "반 친구가 내 약점을 알고 놀려", 
+                content: "한 친구가 내 약점을 알고 계속 놀려. 다른 친구들 앞에서 그런 이야기를 하면 너무 부끄럽고 화가 나. 그만하라고 말해도 장난이라고 하면서 계속해.",
+                emotions: ["😠 화남", "😳 부끄러움", "😞 속상함", "😤 억울함", "😔 스트레스", "😨 두려움"]
+            }
+        ];
+
+        const encouragementMessages = [
+            "너의 마음을 이해해주는 사람이 여기 있어 ✨",
+            "힘든 시간도 지나갈 거야, 조금만 더 힘내자 💪",
+            "너는 생각보다 훨씬 강한 사람이야 🌟",
+            "완벽하지 않아도 괜찮아, 그것이 바로 너니까 🤗",
+            "오늘 하루도 최선을 다한 너에게 박수를 보내 👏",
+            "어려운 일이 있어도 너라면 잘 헤쳐나갈 수 있어 🚀",
+            "네가 특별한 이유는 너만의 고유함이 있기 때문이야 🎈",
+            "실수해도 괜찮아, 그것도 성장의 과정이니까 📈"
+        ];
+
+        // ===== 상태 관리 =====
+        let currentStep = 1;
+        let currentCase = null;
+        let isConsultant = true; // true: 컨설턴트 역할, false: 내담자 역할
+        let visitedSteps = [1]; // 방문한 단계들 추적
+        let selectedEmotions = []; // 선택된 감정들
+        let consultationData = {};
+
+        // ===== DOM 요소 =====
+        const screens = {
+            start: document.getElementById('start-screen'),
+            roleplay: document.getElementById('roleplay-screen'),
+            result: document.getElementById('result-screen')
+        };
+
+        const elements = {
+            // 시작 화면
+            randomMode: document.getElementById('random-mode'),
+            customMode: document.getElementById('custom-mode'),
+            randomCaseArea: document.getElementById('random-case-area'),
+            customCaseArea: document.getElementById('custom-case-area'),
+            drawCaseBtn: document.getElementById('draw-case-btn'),
+            caseDisplay: document.getElementById('case-display'),
+            customTitle: document.getElementById('custom-title'),
+            customContent: document.getElementById('custom-content'),
+            startRoleplayBtn: document.getElementById('start-roleplay-btn'),
+            
+            // 역할극 화면
+            currentStep: document.getElementById('current-step'),
+            stepDesc: document.getElementById('step-desc'),
+            roleDisplay: document.getElementById('role-display'),
+            currentConsultant: document.getElementById('current-consultant'),
+            stepGuide: document.getElementById('step-guide'),
+            nextStepBtn: document.getElementById('next-step-btn'),
+            prevStepBtn: document.getElementById('prev-step-btn'),
+            switchRolesBtn: document.getElementById('switch-roles-btn'),
+            
+            // 사례 표시
+            displayedTitle: document.getElementById('displayed-title'),
+            displayedContent: document.getElementById('displayed-content'),
+            
+            // 각 단계 요소들
+            step1: document.getElementById('step1-empathy'),
+            step2: document.getElementById('step2-abc'),
+            step3: document.getElementById('step3-reframe'),
+            step4: document.getElementById('step4-encourage'),
+            
+            // 결과 화면
+            consultationSummary: document.getElementById('consultation-summary'),
+            downloadImageBtn: document.getElementById('download-image-btn'),
+            printConsultationBtn: document.getElementById('print-consultation-btn'),
+            saveConsultationBtn: document.getElementById('save-consultation-btn'),
+            fullscreenBtn: document.getElementById('fullscreen-btn'),
+            switchAndRestartBtn: document.getElementById('switch-and-restart-btn'),
+            newCaseBtn: document.getElementById('new-case-btn'),
+            restartBtn: document.getElementById('restart-btn')
+        };
+
+        // ===== 유틸리티 함수 =====
+        function showScreen(screenName) {
+            console.log('화면 전환:', screenName);
+            
+            // 모든 화면 숨기기
+            Object.values(screens).forEach(screen => {
+                if (screen) {
+                    screen.classList.add('hidden');
+                    screen.classList.remove('slide-in');
+                }
+            });
+            
+            // 대상 화면 보이기
+            const targetScreen = screens[screenName];
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                targetScreen.classList.add('slide-in');
+                console.log('화면 전환 완료:', screenName);
+            } else {
+                console.error('화면을 찾을 수 없음:', screenName);
+            }
+        }
+
+        // ===== 사례 관리 =====
+        function drawRandomCase() {
+            const randomIndex = Math.floor(Math.random() * sampleCases.length);
+            currentCase = sampleCases[randomIndex];
+            
+            elements.caseDisplay.innerHTML = `
+                <div class="text-left">
+                    <h4 class="font-bold text-gray-800 mb-2">${currentCase.title}</h4>
+                    <p class="text-gray-700">${currentCase.content}</p>
+                </div>
+            `;
+        }
+
+        function useCustomCase() {
+            const title = elements.customTitle.value.trim();
+            const content = elements.customContent.value.trim();
+            
+            if (title && content) {
+                // 커스텀 사례는 기본 감정들로 설정
+                currentCase = { 
+                    title, 
+                    content,
+                    emotions: ["😢 슬픔", "😠 화남", "😟 걱정", "😤 답답함", "😔 외로움", "😨 두려움"]
+                };
+            } else {
+                currentCase = null; // 불완전한 입력시 null로 설정
+            }
+        }
+
+        // ===== 감정 관리 =====
+        function updateRecommendedEmotions() {
+            const container = document.getElementById('recommended-emotions');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!currentCase || !currentCase.emotions) {
+                // 기본 감정들 표시
+                const defaultEmotions = ["😢 슬픔", "😠 화남", "😟 걱정", "😤 답답함", "😔 외로움", "😨 두려움"];
+                defaultEmotions.forEach(emotion => {
+                    const button = document.createElement('button');
+                    button.className = 'emotion-btn p-2 border-2 border-gray-300 rounded-lg hover:border-green-500 text-xs transition-all';
+                    button.textContent = emotion;
+                    button.onclick = () => toggleEmotion(emotion, button);
+                    container.appendChild(button);
+                });
+                return;
+            }
+            
+            currentCase.emotions.forEach(emotion => {
+                const button = document.createElement('button');
+                button.className = 'emotion-btn p-2 border-2 border-gray-300 rounded-lg hover:border-green-500 text-xs transition-all';
+                button.textContent = emotion;
+                button.onclick = () => toggleEmotion(emotion, button);
+                container.appendChild(button);
+            });
+        }
+
+        function toggleEmotion(emotion, button) {
+            if (selectedEmotions.includes(emotion)) {
+                // 감정 제거
+                selectedEmotions = selectedEmotions.filter(e => e !== emotion);
+                button.classList.remove('selected');
+            } else {
+                // 감정 추가
+                selectedEmotions.push(emotion);
+                button.classList.add('selected');
+            }
+            updateSelectedEmotionsDisplay();
+        }
+
+        function addDirectEmotion() {
+            const input = document.getElementById('direct-emotion-input');
+            const emotion = input.value.trim();
+            
+            if (!emotion) {
+                alert('감정을 입력해주세요!');
+                return;
+            }
+            
+            if (selectedEmotions.includes(emotion)) {
+                alert('이미 선택된 감정입니다!');
+                input.value = '';
+                return;
+            }
+            
+            selectedEmotions.push(emotion);
+            input.value = '';
+            updateSelectedEmotionsDisplay();
+        }
+
+        function removeEmotion(emotion) {
+            selectedEmotions = selectedEmotions.filter(e => e !== emotion);
+            updateSelectedEmotionsDisplay();
+            
+            // 추천 감정 버튼도 업데이트
+            const buttons = document.querySelectorAll('.emotion-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent === emotion) {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function updateSelectedEmotionsDisplay() {
+            const container = document.getElementById('selected-emotions-list');
+            
+            if (selectedEmotions.length === 0) {
+                container.innerHTML = '<span class="text-xs text-gray-500">감정을 선택하거나 입력해주세요</span>';
+                return;
+            }
+            
+            container.innerHTML = selectedEmotions.map(emotion => `
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                    ${emotion}
+                    <button onclick="removeEmotion('${emotion}')" class="text-green-600 hover:text-green-800 ml-1">
+                        ✕
+                    </button>
+                </span>
+            `).join('');
+        }
+
+        // ===== 단계 관리 =====
+        function updateStep(step) {
+            currentStep = step;
+            
+            // 방문한 단계 추가
+            if (!visitedSteps.includes(step)) {
+                visitedSteps.push(step);
+            }
+            
+            // 모든 단계 숨기기
+            [elements.step1, elements.step2, elements.step3, elements.step4]
+                .forEach(el => el.classList.add('hidden'));
+            
+            // 현재 단계 표시
+            const stepContents = {
+                1: { element: elements.step1, desc: '마음을 따뜻하게 공감해주세요' },
+                2: { element: elements.step2, desc: '상황을 함께 정리해보세요' },
+                3: { element: elements.step3, desc: '건설적인 해결책을 찾아보세요' },
+                4: { element: elements.step4, desc: '따뜻한 격려로 마무리해주세요' }
+            };
+            
+            const current = stepContents[step];
+            current.element.classList.remove('hidden');
+            elements.stepDesc.textContent = current.desc;
+            
+            // 단계 네비게이션 업데이트
+            updateStepNavigation();
+            
+            // 이전/다음 버튼 업데이트
+            updateNavigationButtons();
+            
+            // 가이드 업데이트
+            updateStepGuide(step);
+        }
+
+        function updateStepNavigation() {
+            document.querySelectorAll('.step-nav-btn').forEach((btn, index) => {
+                const stepNum = index + 1;
+                btn.classList.remove('step-nav-active', 'step-nav-visited', 'step-nav-completed');
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.style.cursor = '';
+                
+                if (stepNum === currentStep) {
+                    // 현재 단계 - 재생 아이콘과 강조
+                    btn.classList.add('step-nav-active');
+                    btn.style.background = '#10b981';
+                    btn.style.color = 'white';
+                    btn.style.cursor = 'pointer';
+                    btn.innerHTML = `▶️ ${stepNum}단계<br><span class="text-xs">진행중</span>`;
+                } else if (visitedSteps.includes(stepNum)) {
+                    // 완료된 단계 - 체크 아이콘
+                    btn.classList.add('step-nav-completed');
+                    btn.style.background = '#d1fae5';
+                    btn.style.color = '#065f46';
+                    btn.style.cursor = 'pointer';
+                    btn.innerHTML = `✅ ${stepNum}단계<br><span class="text-xs">완료</span>`;
+                } else if (stepNum === currentStep + 1) {
+                    // 다음 단계 - 접근 가능
+                    btn.style.background = '#bfdbfe';
+                    btn.style.color = '#1e40af';
+                    btn.style.cursor = 'pointer';
+                    const stepNames = ['공감하기', 'ABC 분석', '새로운 생각', '격려하기'];
+                    btn.innerHTML = `⏭️ ${stepNum}단계<br><span class="text-xs">${stepNames[stepNum-1]}</span>`;
+                } else {
+                    // 접근 불가 단계
+                    btn.style.background = '#e5e7eb';
+                    btn.style.color = '#9ca3af';
+                    btn.style.cursor = 'not-allowed';
+                    const stepIcons = ['💚', '🔍', '✨', '🎁'];
+                    const stepNames = ['공감하기', 'ABC 분석', '새로운 생각', '격려하기'];
+                    btn.innerHTML = `${stepIcons[stepNum-1]} ${stepNum}단계<br><span class="text-xs">${stepNames[stepNum-1]}</span>`;
+                }
+            });
+        }
+
+        function updateNavigationButtons() {
+            // 이전 단계 버튼
+            if (currentStep === 1) {
+                elements.prevStepBtn.disabled = true;
+                elements.prevStepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                elements.prevStepBtn.disabled = false;
+                elements.prevStepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            
+            // 4단계에서는 사이드바의 다음 단계 버튼 숨기기 (4단계 내부에 저장 버튼이 있음)
+            if (currentStep === 4) {
+                elements.nextStepBtn.style.display = 'none';
+            } else {
+                elements.nextStepBtn.style.display = 'block';
+                elements.nextStepBtn.textContent = '➡️ 다음 단계로';
+                elements.nextStepBtn.className = 'w-full bg-blue-500 text-white font-bold py-2 rounded-lg btn-hover';
+            }
+        }
+
+        function updateStepGuide(step) {
+            const guides = {
+                1: `
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <div class="font-bold text-green-700">💚 공감 포인트</div>
+                        <ul class="list-disc ml-4 text-green-600 text-sm">
+                            <li>감정을 인정해주기</li>
+                            <li>"힘들었겠구나" 표현</li>
+                            <li>비슷한 경험 공유</li>
+                        </ul>
+                    </div>`,
+                2: `
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <div class="font-bold text-blue-700">🔍 ABC 분석 방법</div>
+                        <ul class="list-disc ml-4 text-blue-600 text-sm">
+                            <li>A: 정확한 사실만</li>
+                            <li>B: 그때 든 생각</li>
+                            <li>C: 감정과 행동</li>
+                        </ul>
+                    </div>`,
+                3: `
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <div class="font-bold text-purple-700">✨ 생각 바꾸기</div>
+                        <ul class="list-disc ml-4 text-purple-600 text-sm">
+                            <li>현실적인 관점 제시</li>
+                            <li>구체적인 해결책</li>
+                            <li>작은 행동부터</li>
+                        </ul>
+                    </div>`,
+                4: `
+                    <div class="bg-pink-50 p-3 rounded-lg">
+                        <div class="font-bold text-pink-700">🎁 격려하기</div>
+                        <ul class="list-disc ml-4 text-pink-600 text-sm">
+                            <li>진심 어린 응원</li>
+                            <li>친구의 강점 언급</li>
+                            <li>함께 있다는 메시지</li>
+                        </ul>
+                    </div>`
+            };
+            
+            elements.stepGuide.innerHTML = guides[step];
+        }
+
+        // ===== 역할 관리 =====
+        function updateRoleDisplay() {
+            const consultantName = document.getElementById('consultant-name')?.value || '컨설턴트';
+            const clientName = document.getElementById('client-name')?.value || '내담자';
+            
+            const roleDisplay = elements.roleDisplay || document.getElementById('role-display');
+            if (!roleDisplay) {
+                console.error('role-display 요소를 찾을 수 없습니다');
+                return;
+            }
+            
+            if (isConsultant) {
+                roleDisplay.className = 'role-consultant p-3 rounded-lg text-center';
+                roleDisplay.innerHTML = `
+                    <div class="font-bold">👨‍🏫 현재 컨설턴트</div>
+                    <div class="text-sm">${consultantName}</div>
+                `;
+            } else {
+                roleDisplay.className = 'role-client p-3 rounded-lg text-center';
+                roleDisplay.innerHTML = `
+                    <div class="font-bold">🙋‍♀️ 현재 내담자</div>
+                    <div class="text-sm">${clientName}</div>
+                `;
+            }
+        }
+
+        function switchRoles() {
+            // 이름과 학급 정보 자동 교체
+            const consultantNameInput = document.getElementById('consultant-name');
+            const clientNameInput = document.getElementById('client-name');
+            const consultantClassInput = document.getElementById('consultant-class');
+            const clientClassInput = document.getElementById('client-class');
+            
+            // 값 교체 (ES6 구조분해할당 사용)
+            [consultantNameInput.value, clientNameInput.value] = [clientNameInput.value, consultantNameInput.value];
+            [consultantClassInput.value, clientClassInput.value] = [clientClassInput.value, consultantClassInput.value];
+            
+            // 역할 상태 변경
+            isConsultant = !isConsultant;
+            updateRoleDisplay();
+            
+            // 사용자에게 안내
+            alert('✅ 역할이 교체되었습니다!\n\n👨‍🏫 새로운 컨설턴트: ' + consultantNameInput.value + 
+                  '\n🙋‍♀️ 새로운 내담자: ' + clientNameInput.value + 
+                  '\n\n새로운 사례로 역할극을 시작해보세요.');
+            
+            // 새로운 사례로 리셋하거나 계속 진행할지 선택
+            if (confirm('새로운 사례로 다시 시작하시겠어요?\n\n• 확인: 새 사례로 처음부터\n• 취소: 현재 단계에서 계속')) {
+                resetRoleplay();
+                showScreen('start');
+            }
+        }
+
+        // ===== 컨설팅 데이터 수집 =====
+        function collectConsultationData() {
+            // 뽑힌 격려 메시지 수집
+            const drawnMessage = document.getElementById('encouragement-message').textContent;
+            const isDefaultMessage = drawnMessage === '격려 메시지를 뽑아보세요!';
+            
+            consultationData = {
+                case: currentCase,
+                consultant: {
+                    name: document.getElementById('consultant-name').value || '컨설턴트',
+                    class: document.getElementById('consultant-class').value || '-'
+                },
+                client: {
+                    name: document.getElementById('client-name').value || '내담자',
+                    class: document.getElementById('client-class').value || '-'
+                },
+                selectedEmotions: selectedEmotions.slice(), // 배열 복사
+                empathy: document.getElementById('empathy-text').value || '(작성되지 않음)',
+                abcAnalysis: document.getElementById('abc-analysis').value || '(작성되지 않음)',
+                newThinking: document.getElementById('new-thinking').value || '(작성되지 않음)',
+                helpSuggestions: document.getElementById('help-suggestions').value || '(작성되지 않음)',
+                drawnEncouragement: isDefaultMessage ? '' : drawnMessage,
+                personalEncouragement: document.getElementById('personal-encouragement').value || '(작성되지 않음)',
+                timestamp: new Date().toLocaleString('ko-KR')
+            };
+        }
+
+        function generateSummary() {
+            // 참가자 정보 표시
+            document.getElementById('consultation-info').innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm">
+                    <div class="role-consultant px-4 py-2 rounded-full">
+                        <span class="font-semibold">👨‍🏫 컨설턴트:</span> ${consultationData.consultant.name} (${consultationData.consultant.class})
+                    </div>
+                    <div class="role-client px-4 py-2 rounded-full">
+                        <span class="font-semibold">🙋‍♀️ 내담자:</span> ${consultationData.client.name} (${consultationData.client.class})
+                    </div>
+                </div>
+            `;
+            
+            // 완료 시간 표시
+            document.getElementById('completion-time').textContent = consultationData.timestamp;
+            
+            // 주요 내용 요약
+            const summary = `
+                <div class="space-y-8">
+                    <!-- 다룬 고민 -->
+                    <div class="bg-gradient-to-r from-gray-50 to-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                            💭 다룬 고민
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="font-semibold text-lg text-blue-700">${consultationData.case.title}</div>
+                            <div class="text-gray-700 leading-relaxed bg-white p-4 rounded-lg">
+                                "${consultationData.case.content}"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 4단계 컨설팅 결과 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- 1단계: 공감하기 -->
+                        <div class="bg-green-50 p-5 rounded-xl border-l-4 border-green-500">
+                            <h3 class="text-lg font-bold text-green-700 mb-3 flex items-center">
+                                💚 1단계: 마음 공감하기
+                            </h3>
+                            <div class="space-y-3">
+                                ${consultationData.selectedEmotions.length > 0 ? `
+                                    <div>
+                                        <div class="text-sm font-semibold text-green-600 mb-1">파악한 감정:</div>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${consultationData.selectedEmotions.map(emotion => 
+                                                `<span class="bg-green-100 px-2 py-1 rounded-full text-xs">${emotion}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                <div>
+                                    <div class="text-sm font-semibold text-green-600 mb-1">공감 표현:</div>
+                                    <div class="bg-white p-3 rounded-lg text-sm leading-relaxed">
+                                        "${consultationData.empathy}"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2단계: ABC 분석 -->
+                        <div class="bg-blue-50 p-5 rounded-xl border-l-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-700 mb-3 flex items-center">
+                                🔍 2단계: ABC 분석하기
+                            </h3>
+                            <div class="bg-white p-3 rounded-lg text-sm leading-relaxed">
+                                "${consultationData.abcAnalysis}"
+                            </div>
+                        </div>
+                        
+                        <!-- 3단계: 새로운 생각 -->
+                        <div class="bg-purple-50 p-5 rounded-xl border-l-4 border-purple-500">
+                            <h3 class="text-lg font-bold text-purple-700 mb-3 flex items-center">
+                                ✨ 3단계: 새로운 생각 만들기
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-sm font-semibold text-purple-600 mb-1">건강한 생각:</div>
+                                    <div class="bg-white p-3 rounded-lg text-sm leading-relaxed">
+                                        "${consultationData.newThinking}"
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-purple-600 mb-1">구체적 도움:</div>
+                                    <div class="bg-white p-3 rounded-lg text-sm leading-relaxed">
+                                        "${consultationData.helpSuggestions}"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 4단계: 격려하기 -->
+                        <div class="bg-pink-50 p-5 rounded-xl border-l-4 border-pink-500">
+                            <h3 class="text-lg font-bold text-pink-700 mb-3 flex items-center">
+                                🎁 4단계: 따뜻한 격려하기
+                            </h3>
+                            <div class="space-y-3">
+                                ${consultationData.drawnEncouragement ? `
+                                    <div>
+                                        <div class="text-sm font-semibold text-pink-600 mb-1">뽑힌 격려 메시지:</div>
+                                        <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-3 rounded-lg text-sm leading-relaxed font-medium">
+                                            "${consultationData.drawnEncouragement}"
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                <div>
+                                    <div class="text-sm font-semibold text-pink-600 mb-1">나만의 격려 메시지:</div>
+                                    <div class="bg-white p-3 rounded-lg text-sm leading-relaxed">
+                                        "${consultationData.personalEncouragement}"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 컨설팅 하이라이트 -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200">
+                        <h3 class="text-lg font-bold text-yellow-800 mb-3 text-center">
+                            ⭐ 이번 컨설팅의 하이라이트
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div class="bg-white p-3 rounded-lg">
+                                <div class="text-2xl mb-1">💝</div>
+                                <div class="text-sm font-semibold text-gray-700">공감과 이해</div>
+                                <div class="text-xs text-gray-500">따뜻한 마음으로 들어주기</div>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg">
+                                <div class="text-2xl mb-1">🔍</div>
+                                <div class="text-sm font-semibold text-gray-700">체계적 분석</div>
+                                <div class="text-xs text-gray-500">ABC 모델로 문제 파악</div>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg">
+                                <div class="text-2xl mb-1">🌱</div>
+                                <div class="text-sm font-semibold text-gray-700">긍정적 변화</div>
+                                <div class="text-xs text-gray-500">새로운 관점과 격려</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            elements.consultationSummary.innerHTML = summary;
+        }
+
+        // ===== 메인 플로우 =====
+        function startRoleplay() {
+            console.log('startRoleplay 호출됨');
+            console.log('currentCase:', currentCase);
+            
+            const consultantName = document.getElementById('consultant-name').value.trim();
+            const clientName = document.getElementById('client-name').value.trim();
+            
+            console.log('참가자 정보:', consultantName, clientName);
+            
+            if (!consultantName || !clientName) {
+                alert('컨설턴트와 내담자 이름을 모두 입력해주세요!');
+                return;
+            }
+            
+            if (!currentCase) {
+                alert('먼저 고민 사례를 선택해주세요!\n\n• 준비된 사례: "새로운 고민 뽑기" 버튼 클릭\n• 직접 입력: 제목과 내용을 모두 작성');
+                return;
+            }
+            
+            console.log('역할극 시작 조건 만족, 화면 전환 시작');
+            
+            // 상태 초기화
+            currentStep = 1;
+            visitedSteps = [1];
+            selectedEmotions = [];
+            
+            // 사례 표시
+            elements.displayedTitle.textContent = currentCase.title;
+            elements.displayedContent.textContent = currentCase.content;
+            
+            // 역할 표시 업데이트
+            updateRoleDisplay();
+            
+            // 추천 감정들 표시
+            updateRecommendedEmotions();
+            updateSelectedEmotionsDisplay();
+            
+            // 첫 번째 단계로 시작
+            updateStep(1);
+            
+            console.log('화면 전환 실행');
+            showScreen('roleplay');
+        }
+
+        function resetRoleplay() {
+            currentStep = 1;
+            visitedSteps = [1]; // 방문한 단계 초기화
+            selectedEmotions = []; // 선택된 감정 초기화
+            updateStep(1);
+            
+            // 모든 입력 필드 초기화
+            document.querySelectorAll('textarea').forEach(textarea => {
+                if (textarea.id !== 'custom-title' && textarea.id !== 'custom-content') {
+                    textarea.value = '';
+                }
+            });
+            
+            // 직접 입력 필드 초기화
+            const directEmotionInput = document.getElementById('direct-emotion-input');
+            if (directEmotionInput) {
+                directEmotionInput.value = '';
+            }
+            
+            // 감정 버튼 초기화
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 선택된 감정 표시 초기화
+            updateSelectedEmotionsDisplay();
+            
+            // 격려 메시지 초기화
+            document.getElementById('encouragement-message').textContent = '격려 메시지를 뽑아보세요!';
+        }
+
+        function finishRoleplay() {
+            collectConsultationData();
+            generateSummary();
+            showScreen('result');
+        }
+
+        // ===== 이미지 다운로드 & 인쇄 기능 =====
+        async function loadHtml2Canvas() {
+            // html2canvas가 이미 로드되어 있는지 확인
+            if (typeof html2canvas !== 'undefined') {
+                return true;
+            }
+            
+            try {
+                // 동적으로 html2canvas 로드
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.onload = () => {
+                        if (typeof html2canvas !== 'undefined') {
+                            resolve(true);
+                        } else {
+                            reject(new Error('html2canvas 로드 실패'));
+                        }
+                    };
+                    script.onerror = () => reject(new Error('스크립트 로드 실패'));
+                    document.head.appendChild(script);
+                });
+            } catch (error) {
+                console.error('html2canvas 로드 오류:', error);
+                return false;
+            }
+        }
+
+        async function downloadAsImage() {
+            const button = elements.downloadImageBtn;
+            const originalText = button.textContent;
+            
+            try {
+                button.textContent = '📷 라이브러리 로딩 중...';
+                button.disabled = true;
+                
+                // html2canvas 로드 확인 및 로딩
+                const isLoaded = await loadHtml2Canvas();
+                if (!isLoaded) {
+                    throw new Error('이미지 생성 라이브러리를 로드할 수 없습니다.');
+                }
+                
+                button.textContent = '📷 이미지 생성 중...';
+                
+                const element = document.getElementById('printable-consultation');
+                if (!element) {
+                    throw new Error('캡처할 요소를 찾을 수 없습니다.');
+                }
+                
+                // 스크롤을 맨 위로 이동
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // 잠시 기다려서 렌더링 완료 보장
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                console.log('html2canvas 시작...');
+                
+                const canvas = await html2canvas(element, {
+                    scale: 1.5, // 적절한 해상도
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 1200, // 고정 너비
+                    windowHeight: 800,  // 고정 높이
+                    onclone: (clonedDoc) => {
+                        // 클론된 문서에서 no-print 클래스 제거
+                        const noPrintElements = clonedDoc.querySelectorAll('.no-print');
+                        noPrintElements.forEach(el => el.style.display = 'none');
+                    }
+                });
+                
+                console.log('캔버스 생성 완료:', canvas.width, 'x', canvas.height);
+                
+                // 캔버스가 제대로 생성되었는지 확인
+                if (canvas.width === 0 || canvas.height === 0) {
+                    throw new Error('이미지가 제대로 생성되지 않았습니다.');
+                }
+                
+                // 이미지 다운로드
+                const link = document.createElement('a');
+                const timestamp = new Date();
+                const dateStr = `${timestamp.getFullYear()}${(timestamp.getMonth()+1).toString().padStart(2,'0')}${timestamp.getDate().toString().padStart(2,'0')}_${timestamp.getHours().toString().padStart(2,'0')}${timestamp.getMinutes().toString().padStart(2,'0')}`;
+                
+                link.download = `ABC컨설팅_${consultationData.consultant.name}_${consultationData.client.name}_${dateStr}.png`;
+                
+                // 이미지 품질 최적화
+                const dataURL = canvas.toDataURL('image/png', 1.0);
+                link.href = dataURL;
+                
+                // 다운로드 실행
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 성공 메시지
+                button.textContent = '✅ 저장 완료!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('이미지 생성 오류:', error);
+                
+                // 구체적인 오류 메시지 제공
+                let errorMessage = '이미지 저장에 실패했습니다.\n\n';
+                
+                if (error.message.includes('라이브러리')) {
+                    errorMessage += '• 인터넷 연결을 확인해주세요\n• 브라우저를 새로고침해주세요';
+                } else if (error.message.includes('캔버스') || error.message.includes('이미지')) {
+                    errorMessage += '• 다른 브라우저를 사용해보세요\n• 팝업 차단을 해제해주세요';
+                } else {
+                    errorMessage += '• 인쇄 기능(PDF 저장)을 이용해주세요\n• 스크린샷을 활용해주세요';
+                }
+                
+                alert(errorMessage);
+                
+                // 대안 제시
+                if (confirm('인쇄 기능을 사용하시겠습니까?\n(브라우저에서 "PDF로 저장" 선택 가능)')) {
+                    printConsultation();
+                } else if (confirm('전체화면으로 보고 스크린샷을 찍으시겠습니까?')) {
+                    showFullscreen();
+                }
+                
+            } finally {
+                button.disabled = false;
+                if (button.textContent.includes('생성 중') || button.textContent.includes('로딩 중')) {
+                    button.textContent = originalText;
+                }
+            }
+        }
+
+        function printConsultation() {
+            try {
+                // 인쇄 전 스크롤 위치 조정
+                document.getElementById('printable-consultation').scrollIntoView();
+                setTimeout(() => {
+                    window.print();
+                }, 500);
+            } catch (error) {
+                console.error('인쇄 오류:', error);
+                alert('인쇄 기능을 사용할 수 없습니다.\n브라우저 설정에서 팝업을 허용해주세요.');
+            }
+        }
+
+        function showFullscreen() {
+            const element = document.getElementById('printable-consultation');
+            
+            // 모달 생성
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg max-w-5xl max-h-[90vh] overflow-auto relative">
+                    <button id="close-fullscreen" class="absolute top-4 right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 z-10">
+                        ✕
+                    </button>
+                    <div id="fullscreen-content" class="p-6">
+                        ${element.innerHTML}
+                    </div>
+                    <div class="p-4 bg-gray-50 text-center text-sm text-gray-600">
+                        <p>💡 <strong>스크린샷 방법:</strong></p>
+                        <p><strong>Windows:</strong> Win + Shift + S 또는 Print Screen</p>
+                        <p><strong>Mac:</strong> Cmd + Shift + 4</p>
+                        <p><strong>모바일:</strong> 전원 + 볼륨다운 (기종별 상이)</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // 닫기 버튼 이벤트
+            document.getElementById('close-fullscreen').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // 배경 클릭으로 닫기
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+            
+            // ESC 키로 닫기
+            const handleEsc = (e) => {
+                if (e.key === 'Escape') {
+                    document.body.removeChild(modal);
+                    document.removeEventListener('keydown', handleEsc);
+                }
+            };
+            document.addEventListener('keydown', handleEsc);
+        }
+
+        // ===== 이벤트 리스너 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM 로드 완료');
+            
+            // removeEmotion을 전역으로 등록 (HTML onclick에서 사용)
+            window.removeEmotion = removeEmotion;
+            
+            // 초기 사례 뽑기
+            drawRandomCase();
+            
+            // 모드 선택
+            elements.randomMode.addEventListener('click', () => {
+                console.log('랜덤 모드 선택');
+                elements.randomMode.classList.add('active', 'text-white');
+                elements.randomMode.classList.remove('bg-gray-300', 'text-gray-700');
+                elements.customMode.classList.remove('active', 'text-white');
+                elements.customMode.classList.add('bg-gray-300', 'text-gray-700');
+                
+                elements.randomCaseArea.classList.remove('hidden');
+                elements.customCaseArea.classList.add('hidden');
+                
+                // 랜덤 모드로 전환시 기존 사례 유지하거나 새로 뽑기
+                if (!currentCase || !currentCase.emotions) {
+                    drawRandomCase();
+                }
+            });
+            
+            elements.customMode.addEventListener('click', () => {
+                console.log('커스텀 모드 선택');
+                elements.customMode.classList.add('active', 'text-white');
+                elements.customMode.classList.remove('bg-gray-300', 'text-gray-700');
+                elements.randomMode.classList.remove('active', 'text-white');
+                elements.randomMode.classList.add('bg-gray-300', 'text-gray-700');
+                
+                elements.customCaseArea.classList.remove('hidden');
+                elements.randomCaseArea.classList.add('hidden');
+                
+                // 커스텀 모드로 전환시 기존 입력 확인
+                useCustomCase();
+            });
+            
+            // 사례 뽑기
+            elements.drawCaseBtn.addEventListener('click', () => {
+                console.log('새로운 고민 뽑기 클릭');
+                drawRandomCase();
+            });
+            
+            // 커스텀 사례 사용
+            elements.customTitle.addEventListener('input', useCustomCase);
+            elements.customContent.addEventListener('input', useCustomCase);
+            
+            // 직접 감정 입력
+            const addDirectEmotionBtn = document.getElementById('add-direct-emotion-btn');
+            if (addDirectEmotionBtn) {
+                addDirectEmotionBtn.addEventListener('click', addDirectEmotion);
+            }
+            
+            const directEmotionInput = document.getElementById('direct-emotion-input');
+            if (directEmotionInput) {
+                directEmotionInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        addDirectEmotion();
+                    }
+                });
+            }
+            
+            // 역할극 시작
+            elements.startRoleplayBtn.addEventListener('click', startRoleplay);
+            
+            // 단계 진행
+            elements.nextStepBtn.addEventListener('click', () => {
+                if (currentStep < 4) {
+                    updateStep(currentStep + 1);
+                } else {
+                    finishRoleplay();
+                }
+            });
+            
+            // 이전 단계로
+            elements.prevStepBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    updateStep(currentStep - 1);
+                }
+            });
+            
+            // 단계 네비게이션 클릭
+            document.querySelectorAll('.step-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetStep = parseInt(btn.dataset.step);
+                    // 방문한 단계 또는 다음 단계만 클릭 가능
+                    if (visitedSteps.includes(targetStep) || targetStep === currentStep + 1) {
+                        updateStep(targetStep);
+                    }
+                });
+            });
+            
+            // 역할 바꾸기
+            elements.switchRolesBtn.addEventListener('click', switchRoles);
+            
+            // ABC 카드 클릭
+            document.querySelectorAll('.abc-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('filled');
+                });
+            });
+            
+            // 격려 메시지 뽑기
+            const drawEncouragementBtn = document.getElementById('draw-encouragement-btn');
+            if (drawEncouragementBtn) {
+                drawEncouragementBtn.addEventListener('click', () => {
+                    const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+                    document.getElementById('encouragement-message').textContent = randomMessage;
+                });
+            }
+            
+            // 컨설팅 저장 (4단계에서)
+            elements.saveConsultationBtn.addEventListener('click', () => {
+                finishRoleplay();
+            });
+            
+            // 이미지 다운로드
+            elements.downloadImageBtn.addEventListener('click', downloadAsImage);
+            
+            // 인쇄하기
+            elements.printConsultationBtn.addEventListener('click', printConsultation);
+            
+            // 전체화면 보기
+            elements.fullscreenBtn.addEventListener('click', showFullscreen);
+            
+            // 결과 화면 버튼들
+            elements.switchAndRestartBtn.addEventListener('click', () => {
+                switchRoles();
+                resetRoleplay();
+                showScreen('start');
+            });
+            
+            elements.newCaseBtn.addEventListener('click', () => {
+                resetRoleplay();
+                showScreen('start');
+            });
+            
+            elements.restartBtn.addEventListener('click', () => {
+                location.reload();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC 친구상담소 역할놀이 가이드</title>
+    <style>
+        @media print {
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+            
+            .page {
+                page-break-after: always;
+                height: 277mm; /* A4 높이 - 여백 */
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            
+            .page:last-child {
+                page-break-after: auto;
+            }
+            
+            body {
+                font-size: 10pt;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .header-info {
+                display: none;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.3em; }
+            h3 { font-size: 1.1em; }
+            
+            .section {
+                padding: 10px !important;
+                margin: 8px 0 !important;
+            }
+            
+            .tips {
+                padding: 10px !important;
+                margin: 8px 0 !important;
+            }
+            
+            .example {
+                padding: 8px !important;
+                margin: 8px 0 !important;
+            }
+            
+            ul {
+                margin: 5px 0 !important;
+            }
+            
+            li {
+                margin: 3px 0 !important;
+            }
+        }
+        
+        @media screen {
+            body {
+                background-color: #f5f5f5;
+            }
+            
+            .page {
+                max-width: 800px;
+                margin: 0 auto 30px;
+                background: white;
+                padding: 30px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-radius: 15px;
+            }
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--role-color);
+        }
+        
+        .role1 { --role-color: #ff6b6b; }
+        .role2 { --role-color: #4ecdc4; }
+        .role3 { --role-color: #45b7d1; }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 25px 0;
+            font-size: 1.8em;
+        }
+        
+        h2 {
+            color: var(--role-color);
+            margin: 0;
+            font-size: 1.4em;
+        }
+        
+        h3 {
+            color: #333;
+            margin: 15px 0 8px 0;
+            font-size: 1.1em;
+        }
+        
+        h4 {
+            margin: 10px 0 5px 0;
+            font-size: 1em;
+        }
+        
+        .role-number {
+            background: var(--role-color);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4em;
+            flex-shrink: 0;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid var(--role-color);
+        }
+        
+        .tips {
+            background: #fffbf0;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px dashed #f59e0b;
+        }
+        
+        .tips h3 {
+            color: #f59e0b;
+            margin-top: 0;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+        
+        .example {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-style: italic;
+            border-left: 3px solid #4caf50;
+            font-size: 0.95em;
+        }
+        
+        .header-info {
+            text-align: center;
+            background: #667eea;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .header-info h1 {
+            color: white;
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .header-info p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .checklist {
+            background: #f0f4ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .checklist h3 {
+            margin-top: 0;
+        }
+        
+        .checklist label {
+            display: block;
+            margin: 5px 0;
+        }
+        
+        .checklist input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .important {
+            background: #ffe4e1;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #ff1744;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .important ul {
+            font-weight: normal;
+        }
+        
+        .step-box {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 6px;
+        }
+        
+        .step-box h4 {
+            margin: 0 0 5px 0;
+            color: var(--role-color);
+        }
+        
+        .compact-list {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        
+        .compact-list li {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-info no-print">
+        <h1>🤝 ABC 친구상담소 역할놀이 가이드</h1>
+        <p>3명이 한 조가 되어 진행하는 친구 상담 역할놀이</p>
+    </div>
+
+    <!-- 역할 1: 내담자 (1페이지) -->
+    <div class="page role1">
+        <div class="role-header">
+            <span class="role-number">1</span>
+            <h2>내담자 역할</h2>
+        </div>
+        
+        <div class="section">
+            <h3>📌 내담자의 역할</h3>
+            <p style="margin: 5px 0;">친구 관계에서 겪은 어려움이나 고민을 이야기하는 사람입니다.</p>
+        </div>
+
+        <div class="section">
+            <h3>🎯 어떻게 준비하나요?</h3>
+            <ul class="compact-list">
+                <li><strong>실제 경험 활용:</strong> 친구와 있었던 갈등이나 속상했던 일 선택</li>
+                <li><strong>가상 상황 선택:</strong> 실제 경험이 어렵다면 예시 활용
+                    <ul>
+                        <li>친한 친구가 나의 비밀을 다른 사람에게 말했을 때</li>
+                        <li>같이 놀던 친구들이 나를 빼고 놀 때</li>
+                        <li>친구가 나에게만 차갑게 대할 때</li>
+                        <li>그룹 과제에서 친구가 맡은 부분을 하지 않았을 때</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tips">
+            <h3>💡 내담자 역할 팁</h3>
+            <ul class="compact-list">
+                <li>상황을 구체적으로 설명하세요 (언제, 어디서, 누구와)</li>
+                <li>그때의 감정을 솔직하게 표현하세요</li>
+                <li>상담가의 질문에 성실히 답해주세요</li>
+                <li>도움을 받고 싶은 마음으로 대화에 참여하세요</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>✅ 내담자 체크리스트</h3>
+            <ul class="compact-list">
+                <li>이야기할 상황을 정했나요?</li>
+                <li>언제, 어디서, 누구와 있었던 일인지 기억하나요?</li>
+                <li>그때의 감정을 설명할 수 있나요?</li>
+                <li>상담을 통해 어떤 도움을 받고 싶나요?</li>
+            </ul>
+        </div>
+
+        <div class="important">
+            📝 메모 공간
+            <div style="height: 60px; background: white; border: 1px dashed #ccc; margin-top: 10px; border-radius: 5px;"></div>
+        </div>
+    </div>
+
+    <!-- 역할 2: 상담가 (1페이지에 압축) -->
+    <div class="page role2">
+        <div class="role-header">
+            <span class="role-number">2</span>
+            <h2>상담가 역할</h2>
+        </div>
+        
+        <div class="section" style="padding: 10px;">
+            <h3 style="margin-top: 0;">📌 상담가의 역할</h3>
+            <p style="margin: 5px 0;">내담자의 이야기를 듣고 ABC 모델로 문제 해결을 돕는 사람입니다.</p>
+        </div>
+
+        <div class="section" style="padding: 10px;">
+            <h3 style="margin-top: 0;">🎯 ABC 상담 5단계 (총 15분)</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="step-box" style="padding: 8px;">
+                    <h4>1단계: 따뜻한 시작 (2분)</h4>
+                    <ul class="compact-list" style="margin: 3px 0;">
+                        <li>눈 마주치며 인사</li>
+                        <li>편안한 분위기 조성</li>
+                    </ul>
+                    <div class="example" style="padding: 5px; margin: 5px 0; font-size: 0.9em;">
+                        "네 이야기를 듣고 함께 해결해보자"
+                    </div>
+                </div>
+
+                <div class="step-box" style="padding: 8px;">
+                    <h4>2단계: A-상황 파악 (5분)</h4>
+                    <ul class="compact-list" style="margin: 3px 0;">
+                        <li>육하원칙으로 질문</li>
+                        <li>구체적 상황 확인</li>
+                    </ul>
+                    <div class="example" style="padding: 5px; margin: 5px 0; font-size: 0.9em;">
+                        "언제, 어디서 그런 일이 있었어?"
+                    </div>
+                </div>
+
+                <div class="step-box" style="padding: 8px;">
+                    <h4>3단계: B-생각 탐색 (3분)</h4>
+                    <ul class="compact-list" style="margin: 3px 0;">
+                        <li>그때의 생각 묻기</li>
+                        <li>판단 없이 경청</li>
+                    </ul>
+                    <div class="example" style="padding: 5px; margin: 5px 0; font-size: 0.9em;">
+                        "그때 어떤 생각이 들었어?"
+                    </div>
+                </div>
+
+                <div class="step-box" style="padding: 8px;">
+                    <h4>4단계: C-감정 이해 (2분)</h4>
+                    <ul class="compact-list" style="margin: 3px 0;">
+                        <li>감정 확인·공감</li>
+                        <li>감정 강도 확인</li>
+                    </ul>
+                    <div class="example" style="padding: 5px; margin: 5px 0; font-size: 0.9em;">
+                        "정말 속상했겠다"
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-box" style="padding: 8px; margin-top: 10px;">
+                <h4>5단계: 새로운 B와 C 찾기 (3분)</h4>
+                <ul class="compact-list" style="margin: 3px 0;">
+                    <li>다른 관점 제시: "혹시 다르게 생각해볼 수도 있을까?"</li>
+                    <li>긍정적 생각 찾기: "이 상황에서 배울 점은?"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tips" style="padding: 10px;">
+            <h3 style="margin-top: 0;">💡 공감 표현 모음</h3>
+            <p style="margin: 5px 0; font-size: 0.95em;">
+                "그런 일이 있었구나" / "네 마음이 이해돼" / "나라도 그랬을 거야" / "많이 속상했겠다"
+            </p>
+        </div>
+
+        <div class="important" style="padding: 10px;">
+            ⚠️ 피해야 할 것: 판단하기, 비난하기, 해결책 강요하기
+        </div>
+    </div>
+
+    <!-- 역할 3: 기록자 (1페이지) -->
+    <div class="page role3">
+        <div class="role-header">
+            <span class="role-number">3</span>
+            <h2>기록자 역할</h2>
+        </div>
+        
+        <div class="section">
+            <h3>📌 기록자의 역할</h3>
+            <p style="margin: 5px 0;">상담 과정을 관찰하고 ABC 모델에 맞게 정리하는 사람입니다.</p>
+        </div>
+
+        <div class="section">
+            <h3>🎯 기록 방법</h3>
+            <ul class="compact-list">
+                <li><strong>조용히 관찰:</strong> 대화 방해하지 않고 집중해서 듣기</li>
+                <li><strong>핵심 포착:</strong> 중요한 내용을 메모하기</li>
+                <li><strong>ABC 분류:</strong> 들은 내용을 A, B, C로 구분하여 정리</li>
+                <li><strong>웹 기록:</strong> ABC 친구상담소 웹사이트에 입력하기</li>
+            </ul>
+        </div>
+
+        <div class="checklist">
+            <h3>✅ 기록자 체크리스트</h3>
+            <label><input type="checkbox"> A(상황): 언제, 어디서, 누구와, 무슨 일이?</label>
+            <label><input type="checkbox"> B(생각): 그때 어떤 생각을 했는지?</label>
+            <label><input type="checkbox"> C(감정): 어떤 감정을 느꼈는지?</label>
+            <label><input type="checkbox"> 새로운 B: 다르게 생각할 수 있는 방법은?</label>
+            <label><input type="checkbox"> 새로운 C: 새로운 생각으로 바뀐 감정은?</label>
+            <label><input type="checkbox"> 해결 방법: 앞으로 어떻게 할 것인지?</label>
+        </div>
+
+        <div class="example">
+            <h3>📝 기록 예시</h3>
+            <p style="margin: 5px 0; font-size: 0.95em;">
+                <strong>A:</strong> 점심시간에 친구들이 나를 빼고 밥을 먹었다.<br>
+                <strong>B:</strong> 친구들이 나를 싫어하나보다.<br>
+                <strong>C:</strong> 슬프고 외로웠다.<br>
+                <strong>새 B:</strong> 친구들이 깜빡했을 수도 있다.<br>
+                <strong>새 C:</strong> 조금 섭섭하지만 이해할 수 있다.
+            </p>
+        </div>
+
+        <div class="tips">
+            <h3>💡 기록자 팁</h3>
+            <ul class="compact-list">
+                <li>대화를 요약해서 기록하세요</li>
+                <li>감정 표현에 특히 주목하세요</li>
+                <li>개인정보는 쓰지 마세요 (이니셜 사용)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 전체 진행 가이드 (1페이지) -->
+    <div class="page">
+        <h1>📋 전체 진행 순서 (총 25분)</h1>
+        
+        <div class="section">
+            <h3>1️⃣ 시작 전 준비 (5분)</h3>
+            <ul class="compact-list">
+                <li>역할 정하기 (가위바위보 또는 자원)</li>
+                <li>자리 배치: 내담자↔상담가 마주보기, 기록자는 옆에서</li>
+                <li>각자 역할 가이드 읽기</li>
+                <li>ABC 친구상담소 웹사이트 준비 (기록자)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>2️⃣ 상담 진행 (15분)</h3>
+            <div style="background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <strong>전반부 (10분)</strong>
+                        <ul class="compact-list">
+                            <li>시작 인사 (2분)</li>
+                            <li>A-상황 파악 (5분)</li>
+                            <li>B-생각 탐색 (3분)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>후반부 (5분)</strong>
+                        <ul class="compact-list">
+                            <li>C-감정 이해 (2분)</li>
+                            <li>새로운 B, C 찾기 (3분)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>3️⃣ 마무리 (5분)</h3>
+            <ul class="compact-list">
+                <li>기록자가 정리한 내용 확인</li>
+                <li>웹사이트에 최종 입력</li>
+                <li>서로 역할 수행 칭찬하기</li>
+                <li>느낀 점 나누기</li>
+            </ul>
+        </div>
+
+        <div class="important">
+            🌟 성공적인 역할놀이를 위한 약속
+            <ul class="compact-list">
+                <li>친구의 이야기를 비밀로 지켜주세요</li>
+                <li>진지하게 참여해주세요</li>
+                <li>서로를 존중하는 말을 사용해주세요</li>
+                <li>완벽하지 않아도 괜찮아요. 연습이니까요!</li>
+            </ul>
+        </div>
+
+        <div class="section" style="margin-top: 20px;">
+            <h3>📌 역할 교대</h3>
+            <p style="margin: 5px 0;">시간이 있다면 역할을 바꿔서 다시 해보세요. 모든 친구가 각 역할을 경험해보면 좋습니다!</p>
+        </div>
+    </div>
+</body>
+</html>

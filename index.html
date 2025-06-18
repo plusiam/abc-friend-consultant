@@ -34,6 +34,155 @@
         .abc-card:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .abc-card.filled { background: linear-gradient(135deg, #dbeafe, #93c5fd); }
         
+        /* 고민 카드 스타일 */
+        .case-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #3b82f6;
+        }
+        .case-card.selected {
+            border-color: #8b5cf6 !important;
+            background: linear-gradient(135deg, #f3e8ff, #e9d5ff) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        .case-card.selected::before {
+            content: '✅';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #8b5cf6;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        /* ABC 카드 스타일 개선 */
+        .abc-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: visible;
+        }
+        .abc-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        .abc-card.filled {
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+        }
+        .abc-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            border-width: 3px;
+        }
+        
+        /* ABC 가이드 툴팁 */
+        .abc-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 250px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 20;
+            margin-bottom: 8px;
+        }
+        .abc-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: inherit;
+        }
+        .abc-card:hover .abc-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        
+        /* 3단계 가이드 카드 스타일 */
+        .reframe-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: visible;
+            border: 2px solid transparent;
+        }
+        .reframe-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            z-index: 10;
+            border-color: #8b5cf6;
+        }
+        .reframe-card.active {
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            border-width: 3px;
+        }
+        
+        /* 3단계 툴팁 */
+        .reframe-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 280px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 20;
+            margin-bottom: 8px;
+        }
+        .reframe-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: inherit;
+        }
+        .reframe-card:hover .reframe-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        
+        /* 3단계별 색상 */
+        .reframe-old .reframe-tooltip { border-color: #64748b; }
+        .reframe-old .reframe-tooltip::after { border-top-color: #64748b; }
+        .reframe-new .reframe-tooltip { border-color: #8b5cf6; }
+        .reframe-new .reframe-tooltip::after { border-top-color: #8b5cf6; }
+        .reframe-action .reframe-tooltip { border-color: #06b6d4; }
+        .reframe-action .reframe-tooltip::after { border-top-color: #06b6d4; }
+        
         /* 단계 네비게이션 */
         .step-nav-btn { 
             transition: all 0.2s; 
@@ -74,6 +223,33 @@
             .grid-responsive { grid-template-columns: 1fr; }
         }
         
+        /* 텍스트 말줄임 */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* 애니메이션 */
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        
         /* 인쇄 스타일 */
         @media print {
             body * { visibility: hidden; }
@@ -98,9 +274,23 @@
         <header class="text-center bg-white rounded-2xl shadow-lg p-6 mb-6 border-t-4 border-green-500">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">🎭 ABC 통합 컨설팅</h1>
             <p class="text-gray-600 mb-4">ABC 사고 분석과 4단계 컨설팅으로 친구를 도와주는 역할극 연습</p>
-            <div class="flex justify-center items-center gap-4 text-sm">
+            <div class="flex justify-center items-center gap-4 text-sm mb-4">
                 <div class="role-consultant px-3 py-1 rounded-full">👨‍🏫 컨설턴트</div>
                 <div class="role-client px-3 py-1 rounded-full">🙋‍♀️ 내담자</div>
+            </div>
+            
+            <!-- 자동 저장 상태 표시 -->
+            <div class="flex justify-center items-center gap-4 text-xs text-gray-500">
+                <div class="flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span>자동 저장 중</span>
+                </div>
+                <button id="manual-save-btn" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-lg transition-colors text-gray-600 hover:text-gray-800">
+                    💾 수동 저장
+                </button>
+                <button id="clear-data-btn" class="bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg transition-colors text-red-600 hover:text-red-800">
+                    🗑️ 데이터 초기화
+                </button>
             </div>
         </header>
 
@@ -146,11 +336,27 @@
 
                     <!-- 랜덤 사례 영역 -->
                     <div id="random-case-area" class="case-mode-area">
-                        <button id="draw-case-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg btn-hover mb-4">
-                            🔄 새로운 고민 뽑기
-                        </button>
-                        <div id="case-display" class="bg-gray-50 p-4 rounded-lg min-h-[100px] flex items-center justify-center text-gray-500">
-                            버튼을 눌러 고민 사례를 뽑아보세요!
+                        <div class="text-center mb-4">
+                            <p class="text-lg font-semibold text-gray-700 mb-2">🎯 상황을 선택해주세요</p>
+                            <div class="flex justify-between items-center">
+                                <p class="text-sm text-gray-500">총 <span id="total-cases-count">50</span>가지 상황이 준비되어 있어요!</p>
+                                <button id="shuffle-cases-btn" class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm btn-hover">
+                                    🔄 다른 예시
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 고민 카드들 -->
+                        <div id="case-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                            <!-- 동적으로 생성될 카드들 -->
+                        </div>
+                        
+                        <!-- 선택된 사례 표시 -->
+                        <div id="selected-case-display" class="bg-blue-50 border-2 border-blue-300 p-4 rounded-lg hidden">
+                            <h4 class="font-bold text-blue-800 mb-2">✅ 선택된 고민</h4>
+                            <div id="selected-case-content" class="text-blue-700">
+                                <!-- 선택된 사례 내용 -->
+                            </div>
                         </div>
                     </div>
 
@@ -282,27 +488,193 @@
                         <!-- 2단계: ABC 함께 분석하기 -->
                         <div id="step2-abc" class="step-content hidden bg-blue-50 p-4 rounded-lg mb-4">
                             <h4 class="text-lg font-bold text-blue-700 mb-3">🔍 2단계: ABC 함께 분석하기</h4>
+                            
+                            <!-- ABC 설명 -->
+                            <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-blue-500">
+                                <p class="text-sm text-gray-700 mb-2">
+                                    <strong>💡 ABC 분석 방법:</strong> 상황을 세 부분으로 나누어 차근차근 정리해보세요
+                                </p>
+                                <p class="text-xs text-gray-600">
+                                    각 카드에 마우스를 올리면 상세 가이드가 나타나요. 클릭하면 해당 영역으로 이동합니다!
+                                </p>
+                            </div>
+                            
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-red-300" data-abc="A">
-                                    <div class="font-bold text-red-600 text-xl">A</div>
-                                    <div class="text-xs text-red-600">사실/사건</div>
+                                <div class="abc-card abc-a bg-white p-4 rounded-lg text-center border-2 border-red-300 relative" data-abc="A">
+                                    <div class="font-bold text-red-600 text-2xl mb-1">A</div>
+                                    <div class="text-sm text-red-600 font-medium">사실/사건</div>
+                                    <div class="text-xs text-red-500 mt-1">Antecedent</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="abc-tooltip">
+                                        <div class="font-bold text-red-700 mb-2">🔍 A: 사실과 사건</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 포함할 것:</strong></div>
+                                            <div>• 실제로 일어난 일</div>
+                                            <div>• 관찰 가능한 사실</div>
+                                            <div>• 언제, 어디서, 누가, 무엇을</div>
+                                            <div class="mt-2"><strong>✗ 제외할 것:</strong></div>
+                                            <div>• 내 생각이나 해석</div>
+                                            <div>• 감정이나 기분</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-orange-300" data-abc="B">
-                                    <div class="font-bold text-orange-600 text-xl">B</div>
-                                    <div class="text-xs text-orange-600">생각</div>
+                                
+                                <div class="abc-card abc-b bg-white p-4 rounded-lg text-center border-2 border-orange-300 relative" data-abc="B">
+                                    <div class="font-bold text-orange-600 text-2xl mb-1">B</div>
+                                    <div class="text-sm text-orange-600 font-medium">생각/신념</div>
+                                    <div class="text-xs text-orange-500 mt-1">Belief</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="abc-tooltip">
+                                        <div class="font-bold text-orange-700 mb-2">🧠 B: 생각과 신념</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 포함할 것:</strong></div>
+                                            <div>• 그 상황에서 든 생각</div>
+                                            <div>• 나의 해석과 판단</div>
+                                            <div>• "~라고 생각했다"</div>
+                                            <div class="mt-2"><strong>🔍 찾는 질문:</strong></div>
+                                            <div>• 그때 머릿속에 뭐가 떠올랐지?</div>
+                                            <div>• 어떻게 받아들였지?</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="abc-card bg-white p-3 rounded-lg text-center border-2 border-blue-300" data-abc="C">
-                                    <div class="font-bold text-blue-600 text-xl">C</div>
-                                    <div class="text-xs text-blue-600">결과</div>
+                                
+                                <div class="abc-card abc-c bg-white p-4 rounded-lg text-center border-2 border-blue-300 relative" data-abc="C">
+                                    <div class="font-bold text-blue-600 text-2xl mb-1">C</div>
+                                    <div class="text-sm text-blue-600 font-medium">결과</div>
+                                    <div class="text-xs text-blue-500 mt-1">Consequence</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="abc-tooltip">
+                                        <div class="font-bold text-blue-700 mb-2">💫 C: 결과와 반응</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 포함할 것:</strong></div>
+                                            <div>• 그때 느낀 감정</div>
+                                            <div>• 실제로 한 행동</div>
+                                            <div>• 몸의 반응 (심장 빨라짐 등)</div>
+                                            <div class="mt-2"><strong>🔍 찾는 질문:</strong></div>
+                                            <div>• 기분이 어땠지?</div>
+                                            <div>• 어떻게 행동했지?</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <textarea id="abc-analysis" rows="3" class="w-full p-3 border rounded-lg" 
-                                      placeholder="A: 무슨 일이 일어났지? B: 어떤 생각이 들었어? C: 기분이나 행동이 어땠어?"></textarea>
+                            
+                            <!-- 동적 가이드 영역 -->
+                            <div id="abc-guide-area" class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-4 hidden">
+                                <div id="abc-guide-content">
+                                    <!-- 선택된 ABC에 따른 가이드가 여기에 표시 -->
+                                </div>
+                            </div>
+                            
+                            <!-- 입력 영역 -->
+                            <div class="bg-white rounded-lg p-4 border-2 border-gray-200">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="text-sm font-semibold text-gray-700">📝 ABC 분석 작성하기</label>
+                                    <button id="abc-example-btn" class="bg-purple-500 text-white px-3 py-1 rounded-lg text-xs btn-hover">
+                                        💡 예시 보기
+                                    </button>
+                                </div>
+                                <textarea id="abc-analysis" rows="4" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                          placeholder="A: 정확히 무슨 일이 일어났는지 써보세요...&#10;B: 그때 어떤 생각이 들었는지 써보세요...&#10;C: 어떤 기분이었고 어떻게 행동했는지 써보세요..."></textarea>
+                                
+                                <!-- ABC 체크리스트 -->
+                                <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="bg-red-50 p-2 rounded text-xs">
+                                        <div class="font-semibold text-red-700 mb-1">A 체크 ✓</div>
+                                        <div class="text-red-600">객관적 사실만 썼나요?</div>
+                                    </div>
+                                    <div class="bg-orange-50 p-2 rounded text-xs">
+                                        <div class="font-semibold text-orange-700 mb-1">B 체크 ✓</div>
+                                        <div class="text-orange-600">그때 든 생각을 썼나요?</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-2 rounded text-xs">
+                                        <div class="font-semibold text-blue-700 mb-1">C 체크 ✓</div>
+                                        <div class="text-blue-600">감정과 행동을 썼나요?</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 3단계: 새로운 생각 함께 만들기 -->
                         <div id="step3-reframe" class="step-content hidden bg-purple-50 p-4 rounded-lg mb-4">
                             <h4 class="text-lg font-bold text-purple-700 mb-3">✨ 3단계: 새로운 생각 함께 만들기</h4>
+                            
+                            <!-- 3단계 설명 -->
+                            <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-purple-500">
+                                <p class="text-sm text-gray-700 mb-2">
+                                    <strong>💡 생각 바꾸기:</strong> 힘들게 만든 생각을 더 현실적이고 도움이 되는 생각으로 바꿔보세요
+                                </p>
+                                <p class="text-xs text-gray-600">
+                                    각 카드에 마우스를 올리면 가이드가 나타나요. 클릭하면 더 자세한 도움을 받을 수 있어요!
+                                </p>
+                            </div>
+                            
+                            <!-- 3단계 가이드 카드들 -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div class="reframe-card reframe-old bg-gray-100 p-4 rounded-lg text-center relative" data-reframe="old">
+                                    <div class="text-2xl mb-2">🤔</div>
+                                    <div class="font-bold text-gray-700 text-sm mb-1">기존 생각 검토</div>
+                                    <div class="text-xs text-gray-600">문제가 된 생각 찾기</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="reframe-tooltip">
+                                        <div class="font-bold text-gray-700 mb-2">🤔 기존 생각 다시 보기</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 확인할 것:</strong></div>
+                                            <div>• 2단계 B에서 쓴 생각</div>
+                                            <div>• 너무 극단적인 생각은?</div>
+                                            <div>• 도움이 안 되는 생각은?</div>
+                                            <div class="mt-2"><strong>🔍 찾는 신호:</strong></div>
+                                            <div>• "항상", "절대", "완전히"</div>
+                                            <div>• "끝났다", "망했다"</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="reframe-card reframe-new bg-purple-100 p-4 rounded-lg text-center relative" data-reframe="new">
+                                    <div class="text-2xl mb-2">💜</div>
+                                    <div class="font-bold text-purple-700 text-sm mb-1">새로운 생각</div>
+                                    <div class="text-xs text-purple-600">현실적이고 도움되는 생각</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="reframe-tooltip">
+                                        <div class="font-bold text-purple-700 mb-2">💜 새로운 생각 만들기</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 포함할 것:</strong></div>
+                                            <div>• 현실적이고 균형잡힌 생각</div>
+                                            <div>• 도움이 되고 희망적인 생각</div>
+                                            <div>• 구체적이고 실현 가능한 생각</div>
+                                            <div class="mt-2"><strong>🔍 만드는 방법:</strong></div>
+                                            <div>• "부분적으로는...", "때로는..."</div>
+                                            <div>• "다음에는...", "배울 수 있어"</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="reframe-card reframe-action bg-cyan-100 p-4 rounded-lg text-center relative" data-reframe="action">
+                                    <div class="text-2xl mb-2">🎯</div>
+                                    <div class="font-bold text-cyan-700 text-sm mb-1">구체적 행동</div>
+                                    <div class="text-xs text-cyan-600">실제로 할 수 있는 일</div>
+                                    
+                                    <!-- 툴팁 -->
+                                    <div class="reframe-tooltip">
+                                        <div class="font-bold text-cyan-700 mb-2">🎯 구체적 행동 계획</div>
+                                        <div class="text-xs text-gray-700 space-y-1">
+                                            <div><strong>✓ 포함할 것:</strong></div>
+                                            <div>• 실제로 실행 가능한 행동</div>
+                                            <div>• 작고 구체적인 첫 걸음</div>
+                                            <div>• 도움받을 수 있는 방법</div>
+                                            <div class="mt-2"><strong>🔍 만드는 질문:</strong></div>
+                                            <div>• 내일 뭘 해볼까?</div>
+                                            <div>• 누구에게 도움을 요청할까?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 생각 바꾸기 질문들 (기존) -->
                             <div class="bg-yellow-50 p-3 rounded-lg mb-3">
                                 <p class="text-sm font-semibold text-yellow-800 mb-2">💡 생각 바꾸기 질문들</p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-yellow-700">
@@ -312,16 +684,68 @@
                                     <div>• 1년 후에도 중요할까?</div>
                                 </div>
                             </div>
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-2">B' 새로운 생각</label>
-                                    <textarea id="new-thinking" rows="3" class="w-full p-3 border rounded-lg" 
-                                              placeholder="더 현실적이고 도움이 되는 생각으로 바꿔보세요..."></textarea>
+                            
+                            <!-- 동적 가이드 영역 -->
+                            <div id="reframe-guide-area" class="bg-pink-50 border-2 border-pink-300 rounded-lg p-4 mb-4 hidden">
+                                <div id="reframe-guide-content">
+                                    <!-- 선택된 영역에 따른 가이드가 여기에 표시 -->
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-2">🎯 구체적인 도움 방법</label>
-                                    <textarea id="help-suggestions" rows="3" class="w-full p-3 border rounded-lg" 
+                            </div>
+                            
+                            <!-- 입력 영역들 -->
+                            <div class="space-y-4">
+                                <div class="bg-white rounded-lg p-4 border-2 border-gray-200">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-700">💜 B' 새로운 생각</label>
+                                        <button id="new-thinking-example-btn" class="bg-purple-500 text-white px-3 py-1 rounded-lg text-xs btn-hover">
+                                            💡 예시 보기
+                                        </button>
+                                    </div>
+                                    <textarea id="new-thinking" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" 
+                                              placeholder="더 현실적이고 도움이 되는 생각으로 바꿔보세요..."></textarea>
+                                    
+                                    <!-- 새로운 생각 체크리스트 -->
+                                    <div class="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2">
+                                        <div class="bg-purple-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-purple-700 mb-1">현실적 ✓</div>
+                                            <div class="text-purple-600">사실에 근거했나요?</div>
+                                        </div>
+                                        <div class="bg-purple-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-purple-700 mb-1">균형잡힌 ✓</div>
+                                            <div class="text-purple-600">극단적이지 않나요?</div>
+                                        </div>
+                                        <div class="bg-purple-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-purple-700 mb-1">도움되는 ✓</div>
+                                            <div class="text-purple-600">희망을 주나요?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white rounded-lg p-4 border-2 border-gray-200">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-700">🎯 구체적인 도움 방법</label>
+                                        <button id="help-suggestions-example-btn" class="bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs btn-hover">
+                                            💡 예시 보기
+                                        </button>
+                                    </div>
+                                    <textarea id="help-suggestions" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
                                               placeholder="친구가 실제로 할 수 있는 구체적인 행동을 제안해보세요..."></textarea>
+                                    
+                                    <!-- 구체적 행동 체크리스트 -->
+                                    <div class="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2">
+                                        <div class="bg-cyan-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-cyan-700 mb-1">실행 가능 ✓</div>
+                                            <div class="text-cyan-600">실제로 할 수 있나요?</div>
+                                        </div>
+                                        <div class="bg-cyan-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-cyan-700 mb-1">구체적 ✓</div>
+                                            <div class="text-cyan-600">명확하고 세부적인가요?</div>
+                                        </div>
+                                        <div class="bg-cyan-50 p-2 rounded text-xs">
+                                            <div class="font-semibold text-cyan-700 mb-1">첫 걸음 ✓</div>
+                                            <div class="text-cyan-600">작은 것부터 시작하나요?</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -697,6 +1121,202 @@
         let visitedSteps = [1]; // 방문한 단계들 추적
         let selectedEmotions = []; // 선택된 감정들
         let consultationData = {};
+        let displayedCasesIndices = []; // 현재 화면에 표시된 사례들의 인덱스
+        let selectedCaseIndex = null; // 선택된 사례의 인덱스
+        let autoSaveTimer = null; // 자동저장 타이머
+
+        // ===== 자동 저장 기능 =====
+        function saveToLocalStorage() {
+            try {
+                const saveData = {
+                    currentStep,
+                    currentCase,
+                    isConsultant,
+                    visitedSteps,
+                    selectedEmotions,
+                    selectedCaseIndex,
+                    displayedCasesIndices,
+                    formData: {
+                        consultantName: document.getElementById('consultant-name')?.value || '',
+                        consultantClass: document.getElementById('consultant-class')?.value || '',
+                        clientName: document.getElementById('client-name')?.value || '',
+                        clientClass: document.getElementById('client-class')?.value || '',
+                        customTitle: document.getElementById('custom-title')?.value || '',
+                        customContent: document.getElementById('custom-content')?.value || '',
+                        empathyText: document.getElementById('empathy-text')?.value || '',
+                        abcAnalysis: document.getElementById('abc-analysis')?.value || '',
+                        newThinking: document.getElementById('new-thinking')?.value || '',
+                        helpSuggestions: document.getElementById('help-suggestions')?.value || '',
+                        personalEncouragement: document.getElementById('personal-encouragement')?.value || ''
+                    },
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                localStorage.setItem('abc_consulting_data', JSON.stringify(saveData));
+                console.log('데이터 자동 저장됨:', new Date().toLocaleTimeString());
+                
+                // 저장 상태 표시 (선택적)
+                showSaveStatus('💾 자동 저장됨');
+            } catch (error) {
+                console.error('저장 실패:', error);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('abc_consulting_data');
+                if (!savedData) return false;
+
+                const data = JSON.parse(savedData);
+                console.log('저장된 데이터 발견:', data);
+
+                // 저장된 시간이 24시간 이내인지 확인
+                const savedTime = new Date(data.timestamp);
+                const now = new Date();
+                const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+                
+                if (hoursDiff > 24) {
+                    console.log('저장된 데이터가 24시간 이상 경과하여 삭제');
+                    localStorage.removeItem('abc_consulting_data');
+                    return false;
+                }
+
+                // 사용자에게 복구 여부 확인
+                const restoreConfirm = confirm(
+                    `💾 이전에 작업하던 내용이 발견되었어요!\n\n` +
+                    `저장 시간: ${savedTime.toLocaleString('ko-KR')}\n` +
+                    `복구하시겠어요?\n\n` +
+                    `• 확인: 이전 작업 이어서 하기\n` +
+                    `• 취소: 새로 시작하기`
+                );
+
+                if (!restoreConfirm) {
+                    localStorage.removeItem('abc_consulting_data');
+                    return false;
+                }
+
+                // 데이터 복구
+                currentStep = data.currentStep || 1;
+                currentCase = data.currentCase;
+                isConsultant = data.isConsultant !== undefined ? data.isConsultant : true;
+                visitedSteps = data.visitedSteps || [1];
+                selectedEmotions = data.selectedEmotions || [];
+                selectedCaseIndex = data.selectedCaseIndex;
+                displayedCasesIndices = data.displayedCasesIndices || [];
+
+                // 폼 데이터 복구
+                if (data.formData) {
+                    setTimeout(() => {
+                        const elements = {
+                            'consultant-name': data.formData.consultantName,
+                            'consultant-class': data.formData.consultantClass,
+                            'client-name': data.formData.clientName,
+                            'client-class': data.formData.clientClass,
+                            'custom-title': data.formData.customTitle,
+                            'custom-content': data.formData.customContent,
+                            'empathy-text': data.formData.empathyText,
+                            'abc-analysis': data.formData.abcAnalysis,
+                            'new-thinking': data.formData.newThinking,
+                            'help-suggestions': data.formData.helpSuggestions,
+                            'personal-encouragement': data.formData.personalEncouragement
+                        };
+
+                        Object.entries(elements).forEach(([id, value]) => {
+                            const element = document.getElementById(id);
+                            if (element && value) {
+                                element.value = value;
+                            }
+                        });
+                    }, 100);
+                }
+
+                showSaveStatus('✅ 이전 작업 복구됨!', 3000);
+                return true;
+            } catch (error) {
+                console.error('데이터 복구 실패:', error);
+                localStorage.removeItem('abc_consulting_data');
+                return false;
+            }
+        }
+
+        function showSaveStatus(message, duration = 2000) {
+            // 기존 상태 메시지 제거
+            const existingStatus = document.getElementById('save-status');
+            if (existingStatus) {
+                existingStatus.remove();
+            }
+
+            // 새 상태 메시지 생성
+            const statusDiv = document.createElement('div');
+            statusDiv.id = 'save-status';
+            statusDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm font-medium';
+            statusDiv.textContent = message;
+            document.body.appendChild(statusDiv);
+
+            // 애니메이션 효과
+            statusDiv.style.opacity = '0';
+            statusDiv.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                statusDiv.style.transition = 'all 0.3s ease';
+                statusDiv.style.opacity = '1';
+                statusDiv.style.transform = 'translateY(0)';
+            }, 10);
+
+            // 자동 제거
+            setTimeout(() => {
+                statusDiv.style.opacity = '0';
+                statusDiv.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (statusDiv.parentNode) {
+                        statusDiv.parentNode.removeChild(statusDiv);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        function startAutoSave() {
+            // 기존 타이머 정리
+            if (autoSaveTimer) {
+                clearInterval(autoSaveTimer);
+            }
+
+            // 5초마다 자동 저장
+            autoSaveTimer = setInterval(() => {
+                saveToLocalStorage();
+            }, 5000);
+        }
+
+        function stopAutoSave() {
+            if (autoSaveTimer) {
+                clearInterval(autoSaveTimer);
+                autoSaveTimer = null;
+            }
+        }
+
+        function clearSavedData() {
+            localStorage.removeItem('abc_consulting_data');
+            console.log('저장된 데이터 삭제됨');
+        }
+
+        // 페이지 떠나기 전 경고
+        function setupBeforeUnloadWarning() {
+            window.addEventListener('beforeunload', (e) => {
+                // 작업 중인 내용이 있으면 경고
+                const hasWork = 
+                    document.getElementById('empathy-text')?.value?.trim() ||
+                    document.getElementById('abc-analysis')?.value?.trim() ||
+                    document.getElementById('new-thinking')?.value?.trim() ||
+                    document.getElementById('help-suggestions')?.value?.trim() ||
+                    document.getElementById('personal-encouragement')?.value?.trim();
+                
+                if (hasWork) {
+                    e.preventDefault();
+                    e.returnValue = '작업 중인 내용이 있습니다. 정말 페이지를 떠나시겠어요?';
+                    return e.returnValue;
+                }
+            });
+        }
 
         // ===== DOM 요소 =====
         const screens = {
@@ -711,8 +1331,8 @@
             customMode: document.getElementById('custom-mode'),
             randomCaseArea: document.getElementById('random-case-area'),
             customCaseArea: document.getElementById('custom-case-area'),
-            drawCaseBtn: document.getElementById('draw-case-btn'),
-            caseDisplay: document.getElementById('case-display'),
+            shuffleCasesBtn: document.getElementById('shuffle-cases-btn'),
+            caseDisplay: document.getElementById('selected-case-display'),
             customTitle: document.getElementById('custom-title'),
             customContent: document.getElementById('custom-content'),
             startRoleplayBtn: document.getElementById('start-roleplay-btn'),
@@ -772,16 +1392,90 @@
         }
 
         // ===== 사례 관리 =====
-        function drawRandomCase() {
-            const randomIndex = Math.floor(Math.random() * sampleCases.length);
-            currentCase = sampleCases[randomIndex];
+        function generateRandomCases(count = 6) {
+            // 중복 없이 랜덤한 사례들 선택
+            const indices = [];
+            while (indices.length < count && indices.length < sampleCases.length) {
+                const randomIndex = Math.floor(Math.random() * sampleCases.length);
+                if (!indices.includes(randomIndex)) {
+                    indices.push(randomIndex);
+                }
+            }
+            displayedCasesIndices = indices;
+            renderCaseCards();
+        }
+
+        function renderCaseCards() {
+            const container = document.getElementById('case-cards-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            displayedCasesIndices.forEach((caseIndex, displayIndex) => {
+                const caseData = sampleCases[caseIndex];
+                const isSelected = selectedCaseIndex === caseIndex;
+
+                const card = document.createElement('div');
+                card.className = `case-card bg-white p-4 rounded-lg shadow-md hover:shadow-lg ${isSelected ? 'selected' : ''}`;
+                card.innerHTML = `
+                    <div class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">
+                        ${caseData.title}
+                    </div>
+                    <div class="text-xs text-gray-600 line-clamp-3 leading-relaxed">
+                        ${caseData.content.length > 60 ? caseData.content.substring(0, 60) + '...' : caseData.content}
+                    </div>
+                    <div class="mt-2 text-xs">
+                        <span class="text-gray-500">😔 💭 🤔</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => selectCase(caseIndex));
+                container.appendChild(card);
+            });
+        }
+
+        function selectCase(caseIndex) {
+            selectedCaseIndex = caseIndex;
+            currentCase = sampleCases[caseIndex];
             
-            elements.caseDisplay.innerHTML = `
-                <div class="text-left">
-                    <h4 class="font-bold text-gray-800 mb-2">${currentCase.title}</h4>
-                    <p class="text-gray-700">${currentCase.content}</p>
-                </div>
-            `;
+            // 카드 선택 상태 업데이트
+            renderCaseCards();
+            
+            // 선택된 사례 표시
+            updateSelectedCaseDisplay();
+            
+            // 자동 저장
+            saveToLocalStorage();
+        }
+
+        function updateSelectedCaseDisplay() {
+            const display = document.getElementById('selected-case-display');
+            const content = document.getElementById('selected-case-content');
+            
+            if (!display || !content) return;
+            
+            if (currentCase) {
+                display.classList.remove('hidden');
+                content.innerHTML = `
+                    <div class="font-semibold text-lg mb-2">${currentCase.title}</div>
+                    <div class="text-sm leading-relaxed">${currentCase.content}</div>
+                `;
+            } else {
+                display.classList.add('hidden');
+            }
+        }
+
+        function shuffleCases() {
+            selectedCaseIndex = null;
+            currentCase = null;
+            generateRandomCases(6);
+            updateSelectedCaseDisplay();
+        }
+
+        function drawRandomCase() {
+            // 레거시 함수 - 호환성을 위해 유지
+            const randomIndex = Math.floor(Math.random() * sampleCases.length);
+            selectCase(randomIndex);
         }
 
         function useCustomCase() {
@@ -840,6 +1534,7 @@
                 button.classList.add('selected');
             }
             updateSelectedEmotionsDisplay();
+            saveToLocalStorage(); // 자동 저장
         }
 
         function addDirectEmotion() {
@@ -860,6 +1555,7 @@
             selectedEmotions.push(emotion);
             input.value = '';
             updateSelectedEmotionsDisplay();
+            saveToLocalStorage(); // 자동 저장
         }
 
         function removeEmotion(emotion) {
@@ -873,6 +1569,8 @@
                     btn.classList.remove('selected');
                 }
             });
+            
+            saveToLocalStorage(); // 자동 저장
         }
 
         function updateSelectedEmotionsDisplay() {
@@ -893,7 +1591,486 @@
             `).join('');
         }
 
-        // ===== 단계 관리 =====
+        // ===== 3단계 도우미 =====
+        function generateReframeGuide(reframeType) {
+            if (!currentCase) return '';
+            
+            const caseTitle = currentCase.title;
+            
+            const guides = {
+                'old': {
+                    title: '🤔 기존 생각 다시 살펴보기',
+                    questions: [
+                        '2단계에서 쓴 생각 중 어떤 것이 문제가 될까요?',
+                        '너무 극단적이거나 "항상", "절대" 같은 말이 들어있나요?',
+                        '이 생각이 도움이 되고 있나요, 방해가 되고 있나요?',
+                        '만약 친구가 이런 생각을 한다면 뭐라고 말해줄까요?'
+                    ],
+                    example: generateReframeExample(caseTitle, 'old'),
+                    tips: [
+                        '💡 흑백논리: "항상 실패해", "완전히 망했어"',
+                        '💡 파국화: "끝났다", "더 이상 희망이 없어"',
+                        '💡 감정추론: "기분이 나쁘니까 정말 나쁜 일이야"'
+                    ]
+                },
+                'new': {
+                    title: '💜 새롭고 도움이 되는 생각 만들기',
+                    questions: [
+                        '이 상황에서 더 현실적인 생각은 뭘까요?',
+                        '부분적으로나 때로는 다른 가능성은 없을까요?',
+                        '이 경험에서 배울 수 있는 것은 무엇일까요?',
+                        '1년 후의 나라면 지금 나에게 뭐라고 말해줄까요?'
+                    ],
+                    example: generateReframeExample(caseTitle, 'new'),
+                    tips: [
+                        '💡 균형잡기: "이번에는 안 됐지만 다음에는..."',
+                        '💡 부분 인정: "완벽하지 않아도 괜찮아"',
+                        '💡 성장 관점: "이것도 배움의 기회야"'
+                    ]
+                },
+                'action': {
+                    title: '🎯 실행 가능한 구체적 행동',
+                    questions: [
+                        '지금 당장 할 수 있는 작은 행동은 뭘까요?',
+                        '누구에게 도움을 요청할 수 있을까요?',
+                        '비슷한 상황에서 다른 사람들은 어떻게 했을까요?',
+                        '내일부터 시작할 수 있는 첫 걸음은 뭘까요?'
+                    ],
+                    example: generateReframeExample(caseTitle, 'action'),
+                    tips: [
+                        '💡 작은 것부터: 거대한 변화보다 작은 시작',
+                        '💡 구체적으로: 언제, 어디서, 어떻게 명확히',
+                        '💡 도움 요청: 혼자 해결하려 하지 말고'
+                    ]
+                }
+            };
+            
+            return guides[reframeType];
+        }
+
+        function generateReframeExample(caseTitle, reframeType) {
+            // 고민별 맞춤 예시 생성
+            const examples = {
+                '시험 성적이 나빠서 속상해': {
+                    'old': '"이번에도 못했구나. 부모님이 실망하실 거야. 나는 수학을 못하는 아이야." → 너무 극단적이고 자기비판적',
+                    'new': '"이번 시험은 잘 안 됐지만, 평소보다 어려운 문제가 많았어. 다음에는 더 체계적으로 준비해볼 수 있어."',
+                    'action': '1) 틀린 문제 다시 풀어보기 2) 선생님께 모르는 부분 질문하기 3) 친구와 함께 공부하기 4) 부모님께 솔직하게 이야기하고 도움 요청하기'
+                },
+                '친구가 내 비밀을 다른 사람에게 말했어': {
+                    'old': '"B가 내 비밀을 퍼뜨렸구나. 나를 배신했어. 더 이상 믿을 수 없어." → 관계를 완전히 단절하려는 극단적 생각',
+                    'new': '"B가 실수했거나 다른 이유가 있을 수도 있어. 한 번 대화해보고 앞으로 어떻게 할지 정해봐야겠어."',
+                    'action': '1) B와 직접 대화해서 상황 확인하기 2) 내 감정을 솔직하게 표현하기 3) 앞으로의 약속 정하기 4) 다른 친구들에게는 사실 확인 후 대응하기'
+                },
+                '새 학급에 적응하기 어려워': {
+                    'old': '"다른 애들은 이미 친해졌는데 나만 혼자야. 뭔가 이상한 걸까? 계속 이럴 것 같아." → 자기 탓만 하고 미래를 부정적으로 예상',
+                    'new': '"새로운 환경에 적응하는 건 시간이 걸려. 아직 3주밖에 안 됐으니까 충분히 가능성이 있어."',
+                    'action': '1) 관심사가 비슷한 친구 찾아보기 2) 동아리나 모둠 활동 적극 참여하기 3) 먼저 인사하고 말 걸어보기 4) 도움이 필요한 친구 도와주기'
+                }
+            };
+            
+            // 현재 고민과 가장 유사한 예시 찾기
+            for (const [key, value] of Object.entries(examples)) {
+                if (caseTitle.includes(key.split(' ')[0]) || key.includes(caseTitle.split(' ')[0])) {
+                    return value[reframeType];
+                }
+            }
+            
+            // 기본 예시
+            const defaultExamples = {
+                'old': '기존 생각을 검토하고 문제점을 찾아보세요.',
+                'new': '더 현실적이고 균형잡힌 생각을 만들어보세요.',
+                'action': '실제로 실행할 수 있는 구체적인 방법을 생각해보세요.'
+            };
+            
+            return defaultExamples[reframeType];
+        }
+
+        function showReframeGuide(reframeType) {
+            const guideArea = document.getElementById('reframe-guide-area');
+            const guideContent = document.getElementById('reframe-guide-content');
+            
+            if (!guideArea || !guideContent) return;
+            
+            const guide = generateReframeGuide(reframeType);
+            if (!guide) return;
+            
+            // 모든 reframe 카드에서 active 클래스 제거
+            document.querySelectorAll('.reframe-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // 선택된 카드에 active 클래스 추가
+            const selectedCard = document.querySelector(`.reframe-card[data-reframe="${reframeType}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+            
+            const colorMap = {
+                'old': 'gray',
+                'new': 'purple',
+                'action': 'cyan'
+            };
+            const color = colorMap[reframeType];
+            
+            const colorStyles = {
+                'old': { bg: '#6b7280', hover: '#4b5563' },
+                'new': { bg: '#9333ea', hover: '#7c3aed' },
+                'action': { bg: '#06b6d4', hover: '#0891b2' }
+            };
+            
+            guideContent.innerHTML = `
+                <div class="space-y-4">
+                    <h5 class="font-bold text-gray-800">${guide.title}</h5>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h6 class="font-semibold text-gray-700 mb-2">🤔 이런 질문을 해보세요:</h6>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                ${guide.questions.map(q => `<li>• ${q}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h6 class="font-semibold text-gray-700 mb-2">📝 현재 고민의 예시:</h6>
+                            <div class="bg-white p-3 rounded-lg text-sm text-gray-700 border-l-4" style="border-left-color: ${colorStyles[reframeType].bg};">
+                                ${guide.example}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h6 class="font-semibold text-gray-700 mb-2">💡 작성 팁:</h6>
+                        <div class="flex flex-wrap gap-2">
+                            ${guide.tips.map(tip => `<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">${tip}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="focusReframeTextarea('${reframeType}')" class="text-white px-4 py-2 rounded-lg text-sm btn-hover" style="background-color: ${colorStyles[reframeType].bg};">
+                            ✏️ 작성하러 가기
+                        </button>
+                        <button onclick="hideReframeGuide()" class="bg-gray-400 text-white px-4 py-2 rounded-lg text-sm btn-hover">
+                            ✕ 가이드 닫기
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            guideArea.classList.remove('hidden');
+            guideArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideReframeGuide() {
+            const guideArea = document.getElementById('reframe-guide-area');
+            if (guideArea) {
+                guideArea.classList.add('hidden');
+            }
+            
+            // 모든 카드에서 active 클래스 제거
+            document.querySelectorAll('.reframe-card').forEach(card => {
+                card.classList.remove('active');
+            });
+        }
+
+        function focusReframeTextarea(reframeType) {
+            let textarea;
+            
+            if (reframeType === 'new') {
+                textarea = document.getElementById('new-thinking');
+            } else if (reframeType === 'action') {
+                textarea = document.getElementById('help-suggestions');
+            } else {
+                // 'old'의 경우 ABC 분석 영역으로
+                textarea = document.getElementById('abc-analysis');
+            }
+            
+            if (!textarea) return;
+            
+            // 텍스트영역에 포커스
+            textarea.focus();
+            
+            // 가이드 닫기
+            hideReframeGuide();
+            
+            // 입력 영역 강조 효과
+            const colorMap = {
+                'old': 'rgba(107, 114, 128, 0.3)',
+                'new': 'rgba(147, 51, 234, 0.3)',
+                'action': 'rgba(6, 182, 212, 0.3)'
+            };
+            
+            textarea.style.boxShadow = `0 0 0 3px ${colorMap[reframeType]}`;
+            setTimeout(() => {
+                textarea.style.boxShadow = '';
+            }, 2000);
+        }
+
+        function showNewThinkingExample() {
+            if (!currentCase) {
+                alert('먼저 고민 사례를 선택해주세요!');
+                return;
+            }
+            
+            const example = generateReframeExample(currentCase.title, 'new');
+            
+            const useExample = confirm(
+                `💜 "${currentCase.title}" 상황의 새로운 생각 예시입니다:\n\n${example}\n\n이 예시를 참고해서 자신만의 새로운 생각을 만들어보세요!\n\n"확인"을 누르면 예시가 입력창에 들어갑니다. (수정 가능)`
+            );
+            
+            if (useExample) {
+                const textarea = document.getElementById('new-thinking');
+                if (textarea) {
+                    textarea.value = example;
+                    textarea.focus();
+                    saveToLocalStorage();
+                }
+            }
+        }
+
+        function showHelpSuggestionsExample() {
+            if (!currentCase) {
+                alert('먼저 고민 사례를 선택해주세요!');
+                return;
+            }
+            
+            const example = generateReframeExample(currentCase.title, 'action');
+            
+            const useExample = confirm(
+                `🎯 "${currentCase.title}" 상황의 구체적 도움 방법 예시입니다:\n\n${example}\n\n이 예시를 참고해서 실제로 실행할 수 있는 방법을 제안해보세요!\n\n"확인"을 누르면 예시가 입력창에 들어갑니다. (수정 가능)`
+            );
+            
+            if (useExample) {
+                const textarea = document.getElementById('help-suggestions');
+                if (textarea) {
+                    textarea.value = example;
+                    textarea.focus();
+                    saveToLocalStorage();
+                }
+            }
+        }
+        function generateABCGuide(abcType) {
+            if (!currentCase) return '';
+            
+            const caseTitle = currentCase.title;
+            
+            const guides = {
+                'A': {
+                    title: '🔍 A: 사실과 사건 분석하기',
+                    questions: [
+                        '정확히 언제, 어디서 일어났나요?',
+                        '누가 관련되어 있었나요?',
+                        '실제로 무슨 일이 벌어졌나요?',
+                        '다른 사람이 봐도 같은 상황이라고 할 만한 객관적 사실은?'
+                    ],
+                    example: generateSpecificExample(caseTitle, 'A'),
+                    tips: [
+                        '💡 내 생각이나 감정은 빼고 오직 사실만',
+                        '💡 "~라고 생각한다"는 B에 해당',
+                        '💡 카메라로 찍은 것처럼 객관적으로'
+                    ]
+                },
+                'B': {
+                    title: '🧠 B: 생각과 신념 찾아보기',
+                    questions: [
+                        '그 순간 머릿속에 어떤 생각이 떠올랐나요?',
+                        '상황을 어떻게 해석했나요?',
+                        '어떤 걱정이나 예상을 했나요?',
+                        '"~일 것이다", "~해야 한다" 같은 생각이 있었나요?'
+                    ],
+                    example: generateSpecificExample(caseTitle, 'B'),
+                    tips: [
+                        '💡 자동으로 떠오른 생각들을 찾아보세요',
+                        '💡 "만약에...", "~하면 어떡하지?" 같은 생각',
+                        '💡 옳고 그름을 판단한 생각도 포함'
+                    ]
+                },
+                'C': {
+                    title: '💫 C: 결과와 반응 파악하기',
+                    questions: [
+                        '어떤 기분이 들었나요?',
+                        '몸은 어떤 반응을 보였나요?',
+                        '실제로 어떤 행동을 했나요?',
+                        '그 후 상황이 어떻게 되었나요?'
+                    ],
+                    example: generateSpecificExample(caseTitle, 'C'),
+                    tips: [
+                        '💡 감정과 행동 둘 다 포함해보세요',
+                        '💡 몸의 반응도 중요한 결과예요',
+                        '💡 즉시 나타난 것과 나중에 나타난 것 구분'
+                    ]
+                }
+            };
+            
+            return guides[abcType];
+        }
+
+        function generateSpecificExample(caseTitle, abcType) {
+            // 고민별 맞춤 예시 생성
+            const examples = {
+                '시험 성적이 나빠서 속상해': {
+                    'A': '수학 시험에서 65점을 받았다. 평균보다 10점 낮은 점수였다.',
+                    'B': '"이번에도 못했구나. 부모님이 실망하실 거야. 나는 수학을 못하는 아이야."',
+                    'C': '속상하고 부끄러웠다. 집에 가는 길이 무거웠고, 부모님께 말씀드리기 무서웠다.'
+                },
+                '친구가 내 비밀을 다른 사람에게 말했어': {
+                    'A': '내가 A를 좋아한다고 친구 B에게만 말했는데, 며칠 후 다른 반 친구들이 그 이야기를 알고 있었다.',
+                    'B': '"B가 내 비밀을 퍼뜨렸구나. 나를 배신했어. 더 이상 믿을 수 없어."',
+                    'C': '배신감과 화가 났다. B를 피하게 되었고, 다른 친구들에게도 비밀 이야기를 하지 않게 되었다.'
+                },
+                '새 학급에 적응하기 어려워': {
+                    'A': '새 학기가 시작되고 3주가 지났는데, 아직 함께 점심을 먹거나 이야기할 친구가 생기지 않았다.',
+                    'B': '"다른 애들은 이미 친해졌는데 나만 혼자야. 뭔가 이상한 걸까? 계속 이럴 것 같아."',
+                    'C': '외롭고 불안했다. 쉬는 시간에 혼자 있게 되고, 학교 가기가 싫어졌다.'
+                }
+            };
+            
+            // 현재 고민과 가장 유사한 예시 찾기
+            for (const [key, value] of Object.entries(examples)) {
+                if (caseTitle.includes(key.split(' ')[0]) || key.includes(caseTitle.split(' ')[0])) {
+                    return value[abcType];
+                }
+            }
+            
+            // 기본 예시
+            const defaultExamples = {
+                'A': '구체적인 상황과 사실을 객관적으로 써보세요.',
+                'B': '그때 든 생각과 마음속 이야기를 써보세요.',
+                'C': '느낀 감정과 한 행동을 써보세요.'
+            };
+            
+            return defaultExamples[abcType];
+        }
+
+        function showABCGuide(abcType) {
+            const guideArea = document.getElementById('abc-guide-area');
+            const guideContent = document.getElementById('abc-guide-content');
+            
+            if (!guideArea || !guideContent) return;
+            
+            const guide = generateABCGuide(abcType);
+            if (!guide) return;
+            
+            // 모든 ABC 카드에서 active 클래스 제거
+            document.querySelectorAll('.abc-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // 선택된 카드에 active 클래스 추가
+            const selectedCard = document.querySelector(`.abc-card[data-abc="${abcType}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+            
+            guideContent.innerHTML = `
+                <div class="space-y-4">
+                    <h5 class="font-bold text-gray-800">${guide.title}</h5>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h6 class="font-semibold text-gray-700 mb-2">🤔 이런 질문을 해보세요:</h6>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                ${guide.questions.map(q => `<li>• ${q}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h6 class="font-semibold text-gray-700 mb-2">📝 현재 고민의 예시:</h6>
+                            <div class="bg-white p-3 rounded-lg text-sm text-gray-700 italic border-l-4 border-${abcType === 'A' ? 'red' : abcType === 'B' ? 'orange' : 'blue'}-400">
+                                "${guide.example}"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h6 class="font-semibold text-gray-700 mb-2">💡 작성 팁:</h6>
+                        <div class="flex flex-wrap gap-2">
+                            ${guide.tips.map(tip => `<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">${tip}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="focusABCTextarea('${abcType}')" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm btn-hover">
+                            ✏️ ${abcType} 작성하러 가기
+                        </button>
+                        <button onclick="hideABCGuide()" class="bg-gray-400 text-white px-4 py-2 rounded-lg text-sm btn-hover">
+                            ✕ 가이드 닫기
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            guideArea.classList.remove('hidden');
+            guideArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideABCGuide() {
+            const guideArea = document.getElementById('abc-guide-area');
+            if (guideArea) {
+                guideArea.classList.add('hidden');
+            }
+            
+            // 모든 카드에서 active 클래스 제거
+            document.querySelectorAll('.abc-card').forEach(card => {
+                card.classList.remove('active');
+            });
+        }
+
+        function focusABCTextarea(abcType) {
+            const textarea = document.getElementById('abc-analysis');
+            if (!textarea) return;
+            
+            // 텍스트영역에 포커스
+            textarea.focus();
+            
+            // 해당 ABC 섹션으로 커서 이동 (기본 템플릿이 있을 경우)
+            const content = textarea.value;
+            let cursorPosition = 0;
+            
+            if (abcType === 'A') {
+                cursorPosition = content.indexOf('A:') !== -1 ? content.indexOf('A:') + 2 : 0;
+            } else if (abcType === 'B') {
+                cursorPosition = content.indexOf('B:') !== -1 ? content.indexOf('B:') + 2 : content.length;
+            } else if (abcType === 'C') {
+                cursorPosition = content.indexOf('C:') !== -1 ? content.indexOf('C:') + 2 : content.length;
+            }
+            
+            textarea.setSelectionRange(cursorPosition, cursorPosition);
+            
+            // 가이드 닫기
+            hideABCGuide();
+            
+            // 입력 영역 강조 효과
+            textarea.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.3)';
+            setTimeout(() => {
+                textarea.style.boxShadow = '';
+            }, 2000);
+        }
+
+        function showABCExample() {
+            if (!currentCase) {
+                alert('먼저 고민 사례를 선택해주세요!');
+                return;
+            }
+            
+            const exampleA = generateSpecificExample(currentCase.title, 'A');
+            const exampleB = generateSpecificExample(currentCase.title, 'B');
+            const exampleC = generateSpecificExample(currentCase.title, 'C');
+            
+            const exampleText = `A: ${exampleA}\n\nB: ${exampleB}\n\nC: ${exampleC}`;
+            
+            const useExample = confirm(
+                `📝 "${currentCase.title}" 상황의 ABC 분석 예시입니다:\n\n${exampleText}\n\n이 예시를 참고해서 자신만의 ABC 분석을 작성해보세요!\n\n"확인"을 누르면 예시가 입력창에 들어갑니다. (수정 가능)`
+            );
+            
+            if (useExample) {
+                const textarea = document.getElementById('abc-analysis');
+                if (textarea) {
+                    textarea.value = exampleText;
+                    textarea.focus();
+                    saveToLocalStorage();
+                }
+            }
+        }
         function updateStep(step) {
             currentStep = step;
             
@@ -1271,7 +2448,7 @@
             }
             
             if (!currentCase) {
-                alert('먼저 고민 사례를 선택해주세요!\n\n• 준비된 사례: "새로운 고민 뽑기" 버튼 클릭\n• 직접 입력: 제목과 내용을 모두 작성');
+                alert('먼저 고민 사례를 선택해주세요!\n\n• 준비된 사례: 카드를 클릭해서 선택\n• 직접 입력: 제목과 내용을 모두 작성');
                 return;
             }
             
@@ -1534,11 +2711,81 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM 로드 완료');
             
-            // removeEmotion을 전역으로 등록 (HTML onclick에서 사용)
+            // removeEmotion과 ABC, Reframe 관련 함수들을 전역으로 등록
             window.removeEmotion = removeEmotion;
+            window.focusABCTextarea = focusABCTextarea;
+            window.hideABCGuide = hideABCGuide;
+            window.focusReframeTextarea = focusReframeTextarea;
+            window.hideReframeGuide = hideReframeGuide;
             
-            // 초기 사례 뽑기
-            drawRandomCase();
+            // 저장된 데이터 복구 시도
+            const dataRestored = loadFromLocalStorage();
+            
+            if (dataRestored) {
+                // 데이터가 복구된 경우
+                if (currentCase && currentStep > 1) {
+                    // 역할극 화면으로 이동
+                    elements.displayedTitle.textContent = currentCase.title;
+                    elements.displayedContent.textContent = currentCase.content;
+                    updateRoleDisplay();
+                    updateRecommendedEmotions();
+                    updateSelectedEmotionsDisplay();
+                    updateStep(currentStep);
+                    showScreen('roleplay');
+                } else if (currentCase) {
+                    // 시작 화면에서 사례가 선택된 상태로 복구
+                    if (displayedCasesIndices.length > 0) {
+                        renderCaseCards();
+                        updateSelectedCaseDisplay();
+                    } else {
+                        generateRandomCases(6);
+                    }
+                } else {
+                    // 일반적인 초기화
+                    generateRandomCases(6);
+                }
+            } else {
+                // 새로 시작하는 경우
+                generateRandomCases(6);
+            }
+            
+            // 총 사례 수 표시
+            const totalCasesElement = document.getElementById('total-cases-count');
+            if (totalCasesElement) {
+                totalCasesElement.textContent = sampleCases.length;
+            }
+
+            // 수동 저장 버튼
+            const manualSaveBtn = document.getElementById('manual-save-btn');
+            if (manualSaveBtn) {
+                manualSaveBtn.addEventListener('click', () => {
+                    saveToLocalStorage();
+                    showSaveStatus('💾 수동 저장 완료!');
+                });
+            }
+
+            // 데이터 초기화 버튼
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            if (clearDataBtn) {
+                clearDataBtn.addEventListener('click', () => {
+                    if (confirm('⚠️ 정말 모든 데이터를 삭제하시겠어요?\n\n삭제하면 복구할 수 없습니다.')) {
+                        clearSavedData();
+                        location.reload();
+                    }
+                });
+            }
+
+            // 페이지 떠나기 전 경고 설정
+            setupBeforeUnloadWarning();
+            
+            // 자동 저장 시작 (입력 필드에 대한 이벤트 리스너와 함께)
+            document.querySelectorAll('input, textarea').forEach(element => {
+                element.addEventListener('input', () => {
+                    // 입력이 있을 때마다 1초 후 저장 (디바운싱)
+                    clearTimeout(element._saveTimeout);
+                    element._saveTimeout = setTimeout(saveToLocalStorage, 1000);
+                });
+            });
             
             // 모드 선택
             elements.randomMode.addEventListener('click', () => {
@@ -1551,10 +2798,9 @@
                 elements.randomCaseArea.classList.remove('hidden');
                 elements.customCaseArea.classList.add('hidden');
                 
-                // 랜덤 모드로 전환시 기존 사례 유지하거나 새로 뽑기
-                if (!currentCase || !currentCase.emotions) {
-                    drawRandomCase();
-                }
+                // 랜덤 모드로 전환시 새로운 카드들 생성
+                generateRandomCases(6);
+                saveToLocalStorage();
             });
             
             elements.customMode.addEventListener('click', () => {
@@ -1567,19 +2813,29 @@
                 elements.customCaseArea.classList.remove('hidden');
                 elements.randomCaseArea.classList.add('hidden');
                 
-                // 커스텀 모드로 전환시 기존 입력 확인
+                // 커스텀 모드로 전환시 선택 상태 초기화
+                selectedCaseIndex = null;
+                currentCase = null;
                 useCustomCase();
+                saveToLocalStorage();
             });
             
-            // 사례 뽑기
-            elements.drawCaseBtn.addEventListener('click', () => {
-                console.log('새로운 고민 뽑기 클릭');
-                drawRandomCase();
+            // 사례 섞기
+            elements.shuffleCasesBtn.addEventListener('click', () => {
+                console.log('다른 예시 보기 클릭');
+                shuffleCases();
+                saveToLocalStorage();
             });
             
             // 커스텀 사례 사용
-            elements.customTitle.addEventListener('input', useCustomCase);
-            elements.customContent.addEventListener('input', useCustomCase);
+            elements.customTitle.addEventListener('input', () => {
+                useCustomCase();
+                saveToLocalStorage();
+            });
+            elements.customContent.addEventListener('input', () => {
+                useCustomCase();
+                saveToLocalStorage();
+            });
             
             // 직접 감정 입력
             const addDirectEmotionBtn = document.getElementById('add-direct-emotion-btn');
@@ -1597,7 +2853,10 @@
             }
             
             // 역할극 시작
-            elements.startRoleplayBtn.addEventListener('click', startRoleplay);
+            elements.startRoleplayBtn.addEventListener('click', () => {
+                startRoleplay();
+                startAutoSave(); // 역할극 시작 시 자동저장 활성화
+            });
             
             // 단계 진행
             elements.nextStepBtn.addEventListener('click', () => {
@@ -1606,6 +2865,7 @@
                 } else {
                     finishRoleplay();
                 }
+                saveToLocalStorage();
             });
             
             // 이전 단계로
@@ -1613,6 +2873,7 @@
                 if (currentStep > 1) {
                     updateStep(currentStep - 1);
                 }
+                saveToLocalStorage();
             });
             
             // 단계 네비게이션 클릭
@@ -1622,19 +2883,50 @@
                     // 방문한 단계 또는 다음 단계만 클릭 가능
                     if (visitedSteps.includes(targetStep) || targetStep === currentStep + 1) {
                         updateStep(targetStep);
+                        saveToLocalStorage();
                     }
                 });
             });
             
             // 역할 바꾸기
-            elements.switchRolesBtn.addEventListener('click', switchRoles);
+            elements.switchRolesBtn.addEventListener('click', () => {
+                switchRoles();
+                saveToLocalStorage();
+            });
             
             // ABC 카드 클릭
             document.querySelectorAll('.abc-card').forEach(card => {
                 card.addEventListener('click', () => {
+                    const abcType = card.dataset.abc;
+                    showABCGuide(abcType);
                     card.classList.toggle('filled');
                 });
             });
+            
+            // ABC 예시 보기 버튼
+            const abcExampleBtn = document.getElementById('abc-example-btn');
+            if (abcExampleBtn) {
+                abcExampleBtn.addEventListener('click', showABCExample);
+            }
+            
+            // 3단계 Reframe 카드 클릭
+            document.querySelectorAll('.reframe-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const reframeType = card.dataset.reframe;
+                    showReframeGuide(reframeType);
+                });
+            });
+            
+            // 3단계 예시 보기 버튼들
+            const newThinkingExampleBtn = document.getElementById('new-thinking-example-btn');
+            if (newThinkingExampleBtn) {
+                newThinkingExampleBtn.addEventListener('click', showNewThinkingExample);
+            }
+            
+            const helpSuggestionsExampleBtn = document.getElementById('help-suggestions-example-btn');
+            if (helpSuggestionsExampleBtn) {
+                helpSuggestionsExampleBtn.addEventListener('click', showHelpSuggestionsExample);
+            }
             
             // 격려 메시지 뽑기
             const drawEncouragementBtn = document.getElementById('draw-encouragement-btn');
@@ -1648,6 +2940,8 @@
             // 컨설팅 저장 (4단계에서)
             elements.saveConsultationBtn.addEventListener('click', () => {
                 finishRoleplay();
+                stopAutoSave(); // 완료 시 자동저장 중단
+                clearSavedData(); // 저장된 임시 데이터 삭제
             });
             
             // 이미지 다운로드
@@ -1663,15 +2957,18 @@
             elements.switchAndRestartBtn.addEventListener('click', () => {
                 switchRoles();
                 resetRoleplay();
+                clearSavedData(); // 새로 시작할 때 임시 데이터 삭제
                 showScreen('start');
             });
             
             elements.newCaseBtn.addEventListener('click', () => {
                 resetRoleplay();
+                clearSavedData(); // 새로 시작할 때 임시 데이터 삭제
                 showScreen('start');
             });
             
             elements.restartBtn.addEventListener('click', () => {
+                clearSavedData(); // 처음으로 돌아갈 때 임시 데이터 삭제
                 location.reload();
             });
         });

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>친구 ABC 컨설팅 - 친구돕기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .card-hover:hover { transform: translateY(-2px); transition: all 0.2s; }
+        .step-card { transition: all 0.3s ease; }
+        .step-card.active { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .emotion-btn.selected { 
+            background: linear-gradient(135deg, #10b981, #059669); 
+            color: white; 
+            font-weight: 600; 
+        }
+        .slide-in { animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen p-4">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- 헤더 -->
+        <header class="text-center bg-white rounded-2xl shadow-lg p-6 mb-6 border-t-4 border-green-500">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🤝 친구 ABC 컨설팅</h1>
+            <p class="text-gray-600 mb-4">간단한 3단계로 친구의 마음을 따뜻하게 도와주세요</p>
+            <div class="flex justify-center items-center gap-4">
+                <div class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">👥 학생 주도형</div>
+                <div class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">💚 3단계 간편</div>
+            </div>
+        </header>
+
+        <!-- 진행 바 -->
+        <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-600">진행 상황</span>
+                <span class="text-sm text-gray-500" id="progress-text">1 / 3 단계</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="progress-bar bg-green-500 h-2 rounded-full" id="progress-bar" style="width: 33%"></div>
+            </div>
+        </div>
+
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="slide-in">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">🎯 어떤 고민을 도와볼까요?</h2>
+                    <p class="text-gray-600">친구의 고민 상황을 선택하고, 3단계로 따뜻하게 도와주세요</p>
+                </div>
+
+                <!-- 참가자 정보 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                        <h3 class="font-bold text-green-700 mb-3">👨‍🏫 도움 주는 친구</h3>
+                        <input type="text" id="helper-name" placeholder="이름" class="w-full p-2 border rounded-lg mb-2">
+                        <input type="text" id="helper-class" placeholder="학년/반" class="w-full p-2 border rounded-lg">
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-700 mb-3">🙋‍♀️ 도움 받는 친구</h3>
+                        <input type="text" id="friend-name" placeholder="이름" class="w-full p-2 border rounded-lg mb-2">
+                        <input type="text" id="friend-class" placeholder="학년/반" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+
+                <!-- 고민 상황 선택 -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">💭 고민 상황 선택하기</h3>
+                        <button id="shuffle-btn" class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm card-hover">
+                            🔄 다른 상황 보기
+                        </button>
+                    </div>
+                    
+                    <div id="case-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- 동적으로 생성될 고민 카드들 -->
+                    </div>
+                </div>
+
+                <button id="start-consulting-btn" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-4 text-lg rounded-lg card-hover disabled:opacity-50" disabled>
+                    🚀 친구 도움 시작하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 컨설팅 화면 -->
+        <div id="consulting-screen" class="hidden slide-in">
+            <!-- 현재 고민 표시 -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-3">🎭 현재 도움을 주고 있는 상황</h3>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="font-semibold text-blue-800 mb-2" id="current-title">고민 제목</div>
+                    <div class="text-gray-700 mb-3" id="current-situation">A. 상황</div>
+                    <div class="text-orange-700" id="current-thought">B. 부정적 생각</div>
+                </div>
+            </div>
+
+            <!-- 1단계: 감정 읽어주기 -->
+            <div id="step1-emotions" class="step-card bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h3 class="text-2xl font-bold text-purple-700 mb-4">💜 1단계: 친구의 감정 읽어주기</h3>
+                <div class="bg-purple-50 p-4 rounded-lg mb-4">
+                    <p class="text-purple-800 font-medium">친구가 어떤 기분일지 함께 생각해보고, 그 마음을 따뜻하게 읽어주세요</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-gray-700 mb-3">🎯 어떤 감정일까요? (여러 개 선택 가능)</h4>
+                    <div id="emotion-buttons" class="grid grid-cols-3 md:grid-cols-4 gap-2 mb-4">
+                        <!-- 동적으로 생성될 감정 버튼들 -->
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-700 mb-3">💬 친구에게 전할 공감의 말</h4>
+                    <textarea id="empathy-message" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500" 
+                              placeholder="친구의 감정을 인정하고 공감하는 따뜻한 말을 해주세요...&#10;예: '정말 속상했겠구나. 그런 일이 있었다면 나도 그런 기분이었을 것 같아.'"></textarea>
+                </div>
+
+                <button id="step1-next" class="w-full bg-purple-500 text-white font-bold py-3 rounded-lg card-hover">
+                    ➡️ 2단계로 넘어가기
+                </button>
+            </div>
+
+            <!-- 2단계: 새로운 생각과 도움 제안 -->
+            <div id="step2-help" class="step-card hidden bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h3 class="text-2xl font-bold text-cyan-700 mb-4">💡 2단계: 새로운 생각과 도움 제안하기</h3>
+                <div class="bg-cyan-50 p-4 rounded-lg mb-4">
+                    <p class="text-cyan-800 font-medium">부정적인 생각을 더 균형잡히고 도움이 되는 생각으로 바꿔보고, 구체적인 도움을 제안해주세요</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">🌈 새로운 관점 제안하기</h4>
+                        <textarea id="new-perspective" rows="4" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-cyan-500" 
+                                  placeholder="더 현실적이고 희망적인 생각을 제안해주세요...&#10;예: '이번에는 안 됐지만, 다음에는 더 잘할 수 있을 거야. 실수는 누구나 하는 거니까.'"></textarea>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">🎯 구체적인 도움 방법</h4>
+                        <textarea id="help-suggestions" rows="4" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-cyan-500" 
+                                  placeholder="친구가 실제로 할 수 있는 구체적인 방법을 제안해주세요...&#10;예: '선생님께 질문해보거나, 우리가 함께 공부하는 시간을 만들어보자.'"></textarea>
+                    </div>
+                </div>
+
+                <button id="step2-next" class="w-full bg-cyan-500 text-white font-bold py-3 rounded-lg card-hover">
+                    ➡️ 3단계로 넘어가기
+                </button>
+            </div>
+
+            <!-- 3단계: 격려 메시지 -->
+            <div id="step3-encourage" class="step-card hidden bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h3 class="text-2xl font-bold text-pink-700 mb-4">🌟 3단계: 따뜻한 격려 메시지</h3>
+                <div class="bg-pink-50 p-4 rounded-lg mb-4">
+                    <p class="text-pink-800 font-medium">친구에게 힘이 되는 따뜻한 격려의 말을 전해주세요</p>
+                </div>
+
+                <div class="mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <h4 class="font-semibold text-gray-700">🎲 랜덤 격려 메시지</h4>
+                        <button id="random-encourage-btn" class="bg-pink-500 text-white px-4 py-2 rounded-lg text-sm card-hover">
+                            새로 뽑기
+                        </button>
+                    </div>
+                    <div id="random-message" class="bg-gradient-to-r from-pink-100 to-purple-100 p-4 rounded-lg text-pink-800 font-medium text-center">
+                        🌟 격려 메시지를 뽑아보세요!
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-700 mb-3">💌 나만의 격려 메시지</h4>
+                    <textarea id="personal-message" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500" 
+                              placeholder="친구에게 전하고 싶은 특별한 격려의 말을 써보세요...&#10;예: '힘들 때마다 네가 얼마나 소중한 친구인지 기억해. 언제든지 내가 네 곁에 있을게.'"></textarea>
+                </div>
+
+                <button id="complete-btn" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-4 text-lg rounded-lg card-hover">
+                    ✨ 친구 도움 완료하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 완료 화면 -->
+        <div id="result-screen" class="hidden slide-in">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🎉 친구 도움 완료!</h2>
+                    <p class="text-gray-600">따뜻한 마음으로 친구를 도와주셨네요. 정말 멋져요!</p>
+                </div>
+
+                <!-- 요약 정보 -->
+                <div id="result-summary" class="space-y-6 mb-8">
+                    <!-- 동적으로 생성될 요약 내용 -->
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="new-case-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded-lg card-hover">
+                        🆕 새로운 친구 돕기
+                    </button>
+                    <button id="restart-btn" class="bg-gray-500 text-white font-bold px-6 py-3 rounded-lg card-hover">
+                        🏠 처음으로
+                    </button>
+                    <button id="print-btn" class="bg-blue-500 text-white font-bold px-6 py-3 rounded-lg card-hover">
+                        🖨️ 결과 출력하기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 네비게이션 버튼 (컨설팅 중에만 표시) -->
+        <div id="nav-buttons" class="hidden fixed bottom-6 right-6 space-y-2">
+            <button id="prev-btn" class="bg-gray-500 text-white p-3 rounded-full shadow-lg card-hover">
+                ⬅️
+            </button>
+            <button id="next-btn" class="bg-blue-500 text-white p-3 rounded-full shadow-lg card-hover">
+                ➡️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 고민 상황 데이터 (A: 상황, B: 부정적 생각)
+        const consultingCases = [
+            {
+                title: "시험 성적이 나빠서 속상해",
+                situation: "수학 시험에서 65점을 받았다. 평균보다 10점 낮은 점수였다.",
+                negativeThought: "이번에도 못했구나. 부모님이 실망하실 거야. 나는 수학을 못하는 아이야.",
+                emotions: ["😞 실망", "😟 걱정", "😳 부끄러움", "😤 좌절감", "😔 자책감", "😨 두려움"]
+            },
+            {
+                title: "친구가 내 비밀을 다른 사람에게 말했어",
+                situation: "내가 A를 좋아한다고 친구 B에게만 말했는데, 며칠 후 다른 반 친구들이 그 이야기를 알고 있었다.",
+                negativeThought: "B가 내 비밀을 퍼뜨렸구나. 나를 배신했어. 더 이상 믿을 수 없어.",
+                emotions: ["😠 화남", "😔 배신감", "😢 슬픔", "😟 걱정", "😤 억울함", "😞 실망"]
+            },
+            {
+                title: "새 학급에 적응하기 어려워",
+                situation: "새 학기가 시작되고 3주가 지났는데, 아직 함께 점심을 먹거나 이야기할 친구가 생기지 않았다.",
+                negativeThought: "다른 애들은 이미 친해졌는데 나만 혼자야. 뭔가 이상한 걸까? 계속 이럴 것 같아.",
+                emotions: ["😔 외로움", "😟 불안함", "😳 부끄러움", "😞 소외감", "😨 두려움", "😤 답답함"]
+            },
+            {
+                title: "부모님이 자꾸 다른 애와 비교해",
+                situation: "엄마가 맨날 사촌 형이나 친구들과 나를 비교하며 '누구는 이렇게 잘하는데 너는 왜 못하니?'라고 말씀하신다.",
+                negativeThought: "나는 항상 부족한 아이구나. 부모님이 나를 실망스러워하셔. 다른 애들보다 못난 것 같아.",
+                emotions: ["😠 화남", "😔 서러움", "😤 억울함", "😞 자괴감", "😟 스트레스", "😢 슬픔"]
+            },
+            {
+                title: "친구들이 나만 게임에 초대하지 않아",
+                situation: "쉬는 시간마다 친구들이 같이 모여서 게임을 하는데 나만 초대하지 않는다.",
+                negativeThought: "친구들이 나를 싫어하나봐. 나는 재미없는 아이인가? 점점 혼자가 되고 있어.",
+                emotions: ["😔 외로움", "😞 소외감", "😢 서운함", "😳 부끄러움", "😟 불안함", "😤 억울함"]
+            },
+            {
+                title: "급식실에서 밥을 쏟았어",
+                situation: "오늘 급식실에서 실수로 밥그릇을 떨어뜨려서 주변 친구들이 다 쳐다보고 웃었다.",
+                negativeThought: "너무 창피해. 모든 사람들이 나를 웃음거리로 생각할 거야. 내가 너무 어수룩한가봐.",
+                emotions: ["😳 부끄러움", "😞 창피함", "😟 당황스러움", "😔 위축감", "😨 불안함", "😤 짜증남"]
+            },
+            {
+                title: "발표할 때마다 너무 떨려",
+                situation: "수업 시간에 발표를 해야 할 때마다 심장이 빨리 뛰고 목소리가 떨린다.",
+                negativeThought: "다른 애들이 나를 바보라고 생각할 거야. 실수하면 웃음거리가 될 거야. 나는 발표를 못하는 아이야.",
+                emotions: ["😨 두려움", "😟 불안함", "😳 부끄러움", "😞 긴장감", "😔 걱정", "😤 스트레스"]
+            },
+            {
+                title: "친구가 내 별명을 부르며 놀려",
+                situation: "한 친구가 내 외모를 가지고 별명을 만들어서 자꾸 부르며 놀린다.",
+                negativeThought: "내가 정말 이상하게 생겼나봐. 친구들이 다 나를 웃음거리로 본다. 피하고 싶어.",
+                emotions: ["😠 화남", "😞 속상함", "😤 억울함", "😟 짜증남", "😔 스트레스", "😢 서운함"]
+            }
+        ];
+
+        const encouragementMessages = [
+            "힘든 시간이 지나가면 더 강해진 너를 만날 수 있을 거야 💪",
+            "완벽하지 않아도 괜찮아, 그것이 바로 특별한 너니까 🌟",
+            "어려운 일이 있어도 너라면 잘 헤쳐나갈 수 있어 🚀",
+            "실수해도 괜찮아, 그것도 성장의 과정이니까 📈",
+            "네가 소중한 이유는 너만의 고유함이 있기 때문이야 🎈",
+            "오늘 하루도 최선을 다한 너에게 박수를 보내 👏",
+            "너의 마음을 이해해주는 사람이 여기 있어 ✨",
+            "너는 생각보다 훨씬 강하고 멋진 사람이야 🌈"
+        ];
+
+        // 상태 관리
+        let currentStep = 'start';
+        let selectedCase = null;
+        let selectedEmotions = [];
+        let consultingData = {};
+
+        // DOM 요소들
+        const screens = {
+            start: document.getElementById('start-screen'),
+            consulting: document.getElementById('consulting-screen'),
+            result: document.getElementById('result-screen')
+        };
+
+        const steps = {
+            emotions: document.getElementById('step1-emotions'),
+            help: document.getElementById('step2-help'),
+            encourage: document.getElementById('step3-encourage')
+        };
+
+        // 초기화
+        function init() {
+            renderCaseCards();
+            setupEventListeners();
+            updateProgress();
+        }
+
+        // 고민 카드 렌더링
+        function renderCaseCards() {
+            const container = document.getElementById('case-grid');
+            const shuffledCases = [...consultingCases].sort(() => Math.random() - 0.5).slice(0, 4);
+            
+            container.innerHTML = shuffledCases.map((caseData, index) => `
+                <div class="case-card bg-gradient-to-br from-white to-gray-50 p-5 rounded-xl shadow-md border border-gray-200 cursor-pointer card-hover transition-all"
+                     onclick="selectCase(${consultingCases.indexOf(caseData)})">
+                    <div class="text-lg font-bold text-gray-800 mb-3">${caseData.title}</div>
+                    <div class="space-y-2">
+                        <div class="text-sm">
+                            <span class="font-semibold text-red-600">A. 상황:</span>
+                            <span class="text-gray-700">${caseData.situation.substring(0, 40)}...</span>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-semibold text-orange-600">B. 생각:</span>
+                            <span class="text-gray-700">${caseData.negativeThought.substring(0, 40)}...</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex flex-wrap gap-1">
+                        ${caseData.emotions.slice(0, 3).map(emotion => 
+                            `<span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">${emotion}</span>`
+                        ).join('')}
+                        ${caseData.emotions.length > 3 ? '<span class="text-xs text-gray-500">...</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 사례 선택
+        function selectCase(index) {
+            selectedCase = consultingCases[index];
+            
+            // 선택된 카드 표시
+            document.querySelectorAll('.case-card').forEach((card, i) => {
+                if (i === Array.from(document.querySelectorAll('.case-card')).indexOf(event.currentTarget)) {
+                    card.classList.add('ring-4', 'ring-green-500', 'ring-opacity-50');
+                } else {
+                    card.classList.remove('ring-4', 'ring-green-500', 'ring-opacity-50');
+                }
+            });
+            
+            document.getElementById('start-consulting-btn').disabled = false;
+        }
+
+        // 컨설팅 시작
+        function startConsulting() {
+            if (!selectedCase) return;
+            
+            // 참가자 정보 저장
+            consultingData.helper = {
+                name: document.getElementById('helper-name').value || '도움이',
+                class: document.getElementById('helper-class').value || ''
+            };
+            consultingData.friend = {
+                name: document.getElementById('friend-name').value || '친구',
+                class: document.getElementById('friend-class').value || ''
+            };
+            consultingData.case = selectedCase;
+            
+            // 화면 전환
+            showScreen('consulting');
+            showStep('emotions');
+            
+            // 현재 상황 표시
+            updateCurrentSituation();
+            
+            // 감정 버튼 렌더링
+            renderEmotionButtons();
+        }
+
+        // 현재 상황 업데이트
+        function updateCurrentSituation() {
+            document.getElementById('current-title').textContent = selectedCase.title;
+            document.getElementById('current-situation').textContent = `A. 상황: ${selectedCase.situation}`;
+            document.getElementById('current-thought').textContent = `B. 부정적 생각: ${selectedCase.negativeThought}`;
+        }
+
+        // 감정 버튼 렌더링
+        function renderEmotionButtons() {
+            const container = document.getElementById('emotion-buttons');
+            container.innerHTML = selectedCase.emotions.map(emotion => `
+                <button class="emotion-btn p-3 border-2 border-gray-300 rounded-lg text-sm font-medium transition-all card-hover"
+                        onclick="toggleEmotion('${emotion}', this)">
+                    ${emotion}
+                </button>
+            `).join('');
+        }
+
+        // 감정 토글
+        function toggleEmotion(emotion, button) {
+            if (selectedEmotions.includes(emotion)) {
+                selectedEmotions = selectedEmotions.filter(e => e !== emotion);
+                button.classList.remove('selected');
+            } else {
+                selectedEmotions.push(emotion);
+                button.classList.add('selected');
+            }
+        }
+
+        // 단계 이동
+        function nextStep() {
+            const currentStepData = getCurrentStepData();
+            if (!validateCurrentStep()) return;
+            
+            saveCurrentStepData(currentStepData);
+            
+            if (currentStep === 'emotions') {
+                showStep('help');
+            } else if (currentStep === 'help') {
+                showStep('encourage');
+                drawRandomEncouragement();
+            } else if (currentStep === 'encourage') {
+                showResult();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep === 'help') {
+                showStep('emotions');
+            } else if (currentStep === 'encourage') {
+                showStep('help');
+            }
+        }
+
+        // 현재 단계 데이터 가져오기
+        function getCurrentStepData() {
+            switch(currentStep) {
+                case 'emotions':
+                    return {
+                        emotions: selectedEmotions,
+                        empathyMessage: document.getElementById('empathy-message').value
+                    };
+                case 'help':
+                    return {
+                        newPerspective: document.getElementById('new-perspective').value,
+                        helpSuggestions: document.getElementById('help-suggestions').value
+                    };
+                case 'encourage':
+                    return {
+                        randomMessage: document.getElementById('random-message').textContent,
+                        personalMessage: document.getElementById('personal-message').value
+                    };
+                default:
+                    return {};
+            }
+        }
+
+        // 현재 단계 유효성 검사
+        function validateCurrentStep() {
+            switch(currentStep) {
+                case 'emotions':
+                    if (selectedEmotions.length === 0) {
+                        alert('감정을 하나 이상 선택해주세요!');
+                        return false;
+                    }
+                    if (!document.getElementById('empathy-message').value.trim()) {
+                        alert('공감의 말을 적어주세요!');
+                        return false;
+                    }
+                    return true;
+                case 'help':
+                    if (!document.getElementById('new-perspective').value.trim()) {
+                        alert('새로운 관점을 제안해주세요!');
+                        return false;
+                    }
+                    if (!document.getElementById('help-suggestions').value.trim()) {
+                        alert('구체적인 도움 방법을 적어주세요!');
+                        return false;
+                    }
+                    return true;
+                case 'encourage':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // 현재 단계 데이터 저장
+        function saveCurrentStepData(data) {
+            Object.assign(consultingData, data);
+        }
+
+        // 단계 표시
+        function showStep(stepName) {
+            // 모든 단계 숨기기
+            Object.values(steps).forEach(step => {
+                step.classList.add('hidden');
+                step.classList.remove('active');
+            });
+            
+            // 선택된 단계 보이기
+            steps[stepName].classList.remove('hidden');
+            steps[stepName].classList.add('active');
+            
+            currentStep = stepName;
+            updateProgress();
+            
+            // 네비게이션 버튼 표시/숨기기
+            document.getElementById('nav-buttons').classList.remove('hidden');
+            updateNavButtons();
+        }
+
+        // 화면 전환
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            screens[screenName].classList.remove('hidden');
+            
+            if (screenName === 'consulting') {
+                document.getElementById('nav-buttons').classList.remove('hidden');
+            } else {
+                document.getElementById('nav-buttons').classList.add('hidden');
+            }
+        }
+
+        // 진행 상황 업데이트
+        function updateProgress() {
+            const progressMap = {
+                'emotions': { percent: 33, text: '1 / 3 단계' },
+                'help': { percent: 66, text: '2 / 3 단계' },
+                'encourage': { percent: 100, text: '3 / 3 단계' }
+            };
+            
+            const progress = progressMap[currentStep] || { percent: 0, text: '시작' };
+            document.getElementById('progress-bar').style.width = `${progress.percent}%`;
+            document.getElementById('progress-text').textContent = progress.text;
+        }
+
+        // 네비게이션 버튼 업데이트
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.style.display = currentStep === 'emotions' ? 'none' : 'block';
+            nextBtn.textContent = currentStep === 'encourage' ? '완료' : '➡️';
+        }
+
+        // 랜덤 격려 메시지
+        function drawRandomEncouragement() {
+            const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+            document.getElementById('random-message').textContent = randomMessage;
+        }
+
+        // 결과 화면 표시
+        function showResult() {
+            const currentStepData = getCurrentStepData();
+            saveCurrentStepData(currentStepData);
+            
+            showScreen('result');
+            renderResultSummary();
+        }
+
+        // 결과 요약 렌더링
+        function renderResultSummary() {
+            const container = document.getElementById('result-summary');
+            container.innerHTML = `
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📋 컨설팅 요약</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div><strong>도움 준 친구:</strong> ${consultingData.helper.name} ${consultingData.helper.class}</div>
+                        <div><strong>도움 받은 친구:</strong> ${consultingData.friend.name} ${consultingData.friend.class}</div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h4 class="font-bold text-gray-800 mb-3">🎭 상황</h4>
+                    <p class="text-gray-700 mb-2"><strong>제목:</strong> ${consultingData.case.title}</p>
+                    <p class="text-gray-700 mb-2"><strong>A. 상황:</strong> ${consultingData.case.situation}</p>
+                    <p class="text-gray-700"><strong>B. 부정적 생각:</strong> ${consultingData.case.negativeThought}</p>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-xl">
+                    <h4 class="font-bold text-purple-800 mb-3">💜 1단계: 감정 읽어주기</h4>
+                    <p class="text-purple-700 mb-2"><strong>선택된 감정:</strong> ${consultingData.emotions.join(', ')}</p>
+                    <p class="text-purple-700"><strong>공감의 말:</strong> ${consultingData.empathyMessage}</p>
+                </div>
+
+                <div class="bg-cyan-50 p-6 rounded-xl">
+                    <h4 class="font-bold text-cyan-800 mb-3">💡 2단계: 새로운 생각과 도움</h4>
+                    <p class="text-cyan-700 mb-2"><strong>새로운 관점:</strong> ${consultingData.newPerspective}</p>
+                    <p class="text-cyan-700"><strong>구체적 도움:</strong> ${consultingData.helpSuggestions}</p>
+                </div>
+
+                <div class="bg-pink-50 p-6 rounded-xl">
+                    <h4 class="font-bold text-pink-800 mb-3">🌟 3단계: 격려 메시지</h4>
+                    <p class="text-pink-700 mb-2"><strong>랜덤 메시지:</strong> ${consultingData.randomMessage}</p>
+                    ${consultingData.personalMessage ? `<p class="text-pink-700"><strong>개인 메시지:</strong> ${consultingData.personalMessage}</p>` : ''}
+                </div>
+
+                <div class="text-center text-gray-500 text-sm">
+                    <p>완료 시간: ${new Date().toLocaleString('ko-KR')}</p>
+                </div>
+            `;
+        }
+
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 시작 화면
+            document.getElementById('shuffle-btn').addEventListener('click', renderCaseCards);
+            document.getElementById('start-consulting-btn').addEventListener('click', startConsulting);
+            
+            // 단계별 다음 버튼
+            document.getElementById('step1-next').addEventListener('click', nextStep);
+            document.getElementById('step2-next').addEventListener('click', nextStep);
+            document.getElementById('complete-btn').addEventListener('click', nextStep);
+            
+            // 네비게이션 버튼
+            document.getElementById('prev-btn').addEventListener('click', prevStep);
+            document.getElementById('next-btn').addEventListener('click', nextStep);
+            
+            // 격려 메시지
+            document.getElementById('random-encourage-btn').addEventListener('click', drawRandomEncouragement);
+            
+            // 결과 화면 버튼
+            document.getElementById('new-case-btn').addEventListener('click', () => {
+                selectedCase = null;
+                selectedEmotions = [];
+                consultingData = {};
+                showScreen('start');
+                renderCaseCards();
+                document.getElementById('start-consulting-btn').disabled = true;
+            });
+            
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                location.reload();
+            });
+            
+            document.getElementById('print-btn').addEventListener('click', () => {
+                window.print();
+            });
+        }
+
+        // 전역 함수들 (HTML에서 호출)
+        window.selectCase = selectCase;
+        window.toggleEmotion = toggleEmotion;
+
+        // 초기화 실행
+        init();
+    </script>
+</body>
+</html>
